@@ -1,0 +1,12 @@
+#app {
+  color: red;
+}
+
+body {
+  padding: 100px 50px;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
