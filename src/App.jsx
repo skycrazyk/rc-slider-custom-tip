@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Range, Handle } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
@@ -8,42 +8,72 @@ import './style';
 
 /**
  * Идея:
- * 1. Получаем доступ к dom элементам: слайдеру и tooltip`ам
+ * 1. Получаем доступ к dom элементам: слайдеру и tooltip`ам +
  * 2. При событии движение ползунка или изменении размера экрана:
  * 2.1 Сравниваем позиции ползунков относительно граница слайдера и в зависимости от этого
  * меняем значение параметра placement.
  * 2.2 Сравниваем позиции ползунков м/у собой и в зависимости от этого меняем значение
  * параметра placement
  */
+const tooltipIdMin = 'tooltipIdMin'; // генерировать guid
+const tooltipIdMax = 'tooltipIdMax'; // генерировать guid
+let tooltipMinEl;
+let tooltipMaxEl;
+let rangeEl;
 
-const onChange = value => value;
+const onChange = value => {
+  // console.dir(rangeEl.current.handlesRefs);
+  // console.dir(rangeEl.current.sliderRef);
+  // console.log(tooltipElMin, tooltipElMax);
+};
 
-const handle = props => {
+const onPopupAlign = () => {
+  if (!tooltipMinEl && !tooltipMaxEl) {
+    tooltipMinEl = document.getElementById(tooltipIdMin);
+    tooltipMaxEl = document.getElementById(tooltipIdMax);
+  }
+};
+
+const CustomHandle = props => {
   const { value, dragging, index, ...restProps } = props;
 
-  console.log(props);
+  const isMin = index === 0;
 
   return (
     <Tooltip
+      id={isMin ? tooltipIdMin : tooltipIdMax}
       prefixCls="rc-slider-tooltip"
       overlay={value}
       visible={true}
       placement={index === 0 ? 'bottomLeft' : 'bottomRight'}
       key={index}
+      onPopupAlign={onPopupAlign}
     >
       <Handle value={value} {...restProps} />
     </Tooltip>
   );
 };
 
-const App = () => (
-  <Range
-    min={900000}
-    max={19000000}
-    defaultValue={[1500000, 10000000]}
-    handle={handle}
-    onChange={onChange}
-  />
-);
+const App = () => {
+  rangeEl = useRef(null);
+
+  // useEffect(() => {
+  //   debugger;
+  //   tooltipElMin = document.getElementById(tooltipIdMin);
+  //   tooltipElMax = document.getElementById(tooltipIdMax);
+  //   console.log(tooltipElMin, tooltipElMax);
+  // });
+
+  return (
+    <Range
+      ref={rangeEl}
+      min={900000}
+      max={19000000}
+      defaultValue={[1500000, 10000000]}
+      handle={CustomHandle}
+      onChange={onChange}
+    />
+  );
+};
 
 export default hot(App);
