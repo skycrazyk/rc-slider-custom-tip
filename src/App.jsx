@@ -21,12 +21,15 @@ let tooltipMinEl;
 let tooltipMaxEl;
 let rangeEl;
 
-const onChange = value => {
+const onChange = () => {
   // console.dir(rangeEl.current.handlesRefs);
   // console.dir(rangeEl.current.sliderRef);
-  // console.log(tooltipElMin, tooltipElMax);
+  // console.log(tooltipMinEl, tooltipMaxEl);
+  // console.dir(tooltipMinEl.getBoundingClientRect().x);
+  // console.dir(rangeEl.current.sliderRef.getBoundingClientRect().x);
 };
 
+// Получаем доступ к DOM элементам
 const onPopupAlign = () => {
   if (!tooltipMinEl && !tooltipMaxEl) {
     tooltipMinEl = document.getElementById(tooltipIdMin);
@@ -39,13 +42,39 @@ const CustomHandle = props => {
 
   const isMin = index === 0;
 
+  let tooltipMinX;
+  let tooltipHalfWidth;
+  let rangeX;
+  let handleMinCenter;
+
+  if (tooltipMinEl && rangeEl) {
+    tooltipHalfWidth = tooltipMinEl.width / 2;
+    tooltipMinX = tooltipMinEl.getBoundingClientRect().x;
+    rangeX = rangeEl.current.sliderRef.getBoundingClientRect().x;
+  }
+
+  // console.log(
+  //   'dragging',
+  //   dragging,
+  //   'index',
+  //   index,
+  //   'tooltipMinX',
+  //   tooltipMinX,
+  //   'rangeX',
+  //   rangeX,
+  //   'props',
+  //   props
+  // );
+
+  const placement = isMin && tooltipMinX <= rangeX ? 'bottomLeft' : 'bottom';
+
   return (
     <Tooltip
       id={isMin ? tooltipIdMin : tooltipIdMax}
       prefixCls="rc-slider-tooltip"
       overlay={value}
       visible={true}
-      placement={index === 0 ? 'bottomLeft' : 'bottomRight'}
+      placement={placement}
       key={index}
       onPopupAlign={onPopupAlign}
     >
@@ -57,13 +86,6 @@ const CustomHandle = props => {
 const App = () => {
   rangeEl = useRef(null);
 
-  // useEffect(() => {
-  //   debugger;
-  //   tooltipElMin = document.getElementById(tooltipIdMin);
-  //   tooltipElMax = document.getElementById(tooltipIdMax);
-  //   console.log(tooltipElMin, tooltipElMax);
-  // });
-
   return (
     <Range
       ref={rangeEl}
@@ -72,6 +94,7 @@ const App = () => {
       defaultValue={[1500000, 10000000]}
       handle={CustomHandle}
       onChange={onChange}
+      step={10000}
     />
   );
 };
