@@ -11,6 +11,19 @@ body {
   box-sizing: border-box;
 }
 
-#tooltipIdMin {
-  width: 55px;
+.rc-slider-tooltip-inner {
+  position: relative;
+  padding: 0;
+  background: none;
+  color: #fff;
+  box-shadow: none;
+}
+
+.rc-slider-tooltip-value {
+  padding: 3px 4px;
+  border-radius: 4px;
+}
+
+.rc-slider-tooltip-show-value {
+  background-color: rgba(0, 0, 0, 0.5);
 }

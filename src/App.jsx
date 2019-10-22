@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, Fragment } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Range, Handle } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
@@ -39,42 +39,67 @@ const onPopupAlign = () => {
 
 const CustomHandle = props => {
   const { value, dragging, index, ...restProps } = props;
-
   const isMin = index === 0;
 
-  let tooltipMinX;
-  let tooltipHalfWidth;
-  let rangeX;
-  let handleMinCenter;
+  if (rangeEl && rangeEl.current) {
+    const rangeBounds = rangeEl.current.sliderRef.getBoundingClientRect();
 
-  if (tooltipMinEl && rangeEl) {
-    tooltipHalfWidth = tooltipMinEl.width / 2;
-    tooltipMinX = tooltipMinEl.getBoundingClientRect().x;
-    rangeX = rangeEl.current.sliderRef.getBoundingClientRect().x;
+    if (tooltipMinEl) {
+      const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
+
+      const tooltipShowValueEl = tooltipMinEl.querySelector(
+        '.rc-slider-tooltip-show-value'
+      );
+
+      const tooltipHideValueEl = tooltipMinEl.querySelector(
+        '.rc-slider-tooltip-hide-value'
+      );
+
+      const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
+
+      if (rangeBounds.x >= tooltipMinElBounds.x) {
+        // console.log(rangeBounds.x, tooltipWrapMinElBounds.x);
+        tooltipShowValueEl.style = [
+          'position: fixed',
+          `top: ${tooltipHideValueElBounds.y}px`,
+          `left: ${rangeBounds.x}px`,
+        ].join(';');
+      } else {
+        tooltipShowValueEl.style = [
+          `position: absolute`,
+          'top: 0',
+          'left: 0',
+        ].join(';');
+      }
+    }
   }
-
-  // console.log(
-  //   'dragging',
-  //   dragging,
-  //   'index',
-  //   index,
-  //   'tooltipMinX',
-  //   tooltipMinX,
-  //   'rangeX',
-  //   rangeX,
-  //   'props',
-  //   props
-  // );
-
-  const placement = isMin && tooltipMinX <= rangeX ? 'bottomLeft' : 'bottom';
 
   return (
     <Tooltip
       id={isMin ? tooltipIdMin : tooltipIdMax}
       prefixCls="rc-slider-tooltip"
-      overlay={value}
+      overlay={
+        <>
+          <div
+            className="rc-slider-tooltip-value rc-slider-tooltip-hide-value"
+            style={{ visibility: 'hidden' }}
+          >
+            {value}
+          </div>
+          <div
+            className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+            }}
+          >
+            {value}
+          </div>
+        </>
+      }
       visible={true}
-      placement={placement}
+      placement="bottom"
       key={index}
       onPopupAlign={onPopupAlign}
     >
