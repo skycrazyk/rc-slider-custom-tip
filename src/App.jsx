@@ -15,6 +15,7 @@ import './style';
  * 2.2 Сравниваем позиции ползунков м/у собой и в зависимости от этого меняем значение
  * параметра placement
  */
+const space = 10;
 const tooltipIdMin = 'tooltipIdMin'; // генерировать guid
 const tooltipIdMax = 'tooltipIdMax'; // генерировать guid
 let tooltipMinEl;
@@ -42,8 +43,12 @@ const CustomHandle = props => {
   const isMin = index === 0;
 
   if (rangeEl && rangeEl.current) {
+    let isMinFixed;
+    let isMaxFixed;
+
     const rangeBounds = rangeEl.current.sliderRef.getBoundingClientRect();
 
+    // Относительно левого края
     if (isMin && tooltipMinEl) {
       const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
 
@@ -72,6 +77,7 @@ const CustomHandle = props => {
       }
     }
 
+    // Относительно правого края
     if (!isMin && tooltipMaxEl) {
       const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
 
@@ -97,6 +103,93 @@ const CustomHandle = props => {
           'top: 0',
           'right: 0',
         ].join(';');
+      }
+    }
+
+    // Между собой
+    if (tooltipMinEl && tooltipMaxEl) {
+      // Левый бегунок
+      const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
+
+      // Левый бегунок - скрытое значение
+      const tooltipMinHideValueEl = tooltipMinEl.querySelector(
+        '.rc-slider-tooltip-hide-value'
+      );
+
+      const tooltipMinHideValueElBounds = tooltipMinHideValueEl.getBoundingClientRect();
+
+      // Левый бегунок - видимое значение
+      const tooltipMinShowValueEl = tooltipMinEl.querySelector(
+        '.rc-slider-tooltip-show-value'
+      );
+
+      const tooltipMinShowValueElBounds = tooltipMinShowValueEl.getBoundingClientRect();
+
+      // Правый бегунок
+      const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
+
+      // Правый бегунок - скрытое значение
+      const tooltipMaxHideValueEl = tooltipMaxEl.querySelector(
+        '.rc-slider-tooltip-hide-value'
+      );
+
+      const tooltipMaxHideValueElBounds = tooltipMaxHideValueEl.getBoundingClientRect();
+
+      // Правый бегунок - видимое значение
+      const tooltipMaxShowValueEl = tooltipMaxEl.querySelector(
+        '.rc-slider-tooltip-show-value'
+      );
+
+      const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
+
+      // Логика позиционирования
+      if (
+        tooltipMinShowValueElBounds.right + space >=
+        tooltipMaxShowValueElBounds.left
+      ) {
+        // У левого края
+        if (rangeBounds.left >= tooltipMinElBounds.left) {
+          tooltipMaxShowValueEl.style = [
+            'position: fixed',
+            `top: ${tooltipMaxHideValueElBounds.top}px`,
+            `left: ${tooltipMinShowValueElBounds.right + space}px`,
+          ].join(';');
+        }
+
+        // У правого края
+        else if (rangeBounds.right <= tooltipMaxElBounds.right) {
+          tooltipMinShowValueEl.style = [
+            'position: fixed',
+            `top: ${tooltipMinHideValueElBounds.top}px`,
+            `left: ${tooltipMaxShowValueElBounds.left -
+              tooltipMinShowValueElBounds.width -
+              space}px`,
+          ].join(';');
+        }
+
+        // В центре
+        else {
+          const diff =
+            tooltipMinHideValueElBounds.right +
+            space -
+            tooltipMaxHideValueElBounds.left;
+
+          const half = diff / 2;
+
+          // Сдвигаем левый тултип
+          tooltipMinShowValueEl.style = [
+            'position: fixed',
+            `top: ${tooltipMinHideValueElBounds.top}px`,
+            `left: ${tooltipMinHideValueElBounds.left - half}px`,
+          ].join(';');
+
+          // Сдвигаем правый тутлип
+          tooltipMaxShowValueEl.style = [
+            'position: fixed',
+            `top: ${tooltipMaxHideValueElBounds.top}px`,
+            `left: ${tooltipMaxHideValueElBounds.left + half}px`,
+          ].join(';');
+        }
       }
     }
   }
