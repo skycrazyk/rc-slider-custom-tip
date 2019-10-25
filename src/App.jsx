@@ -2,6 +2,7 @@ import React, { Component, useRef, createRef } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Range, Handle } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
+import nanoid from 'nanoid';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './style';
@@ -17,8 +18,8 @@ class App extends Component {
 
     this.rangeEl = createRef();
     this.space = 10;
-    this.tooltipIdMin = 'tooltipIdMin'; // генерировать guid
-    this.tooltipIdMax = 'tooltipIdMax'; // генерировать guid
+    this.tooltipIdMin = nanoid();
+    this.tooltipIdMax = nanoid();
     this.customHandle = this.customHandle.bind(this);
     this.onPopupAlign = this.onPopupAlign.bind(this);
   }
@@ -268,12 +269,12 @@ class App extends Component {
   render() {
     return (
       <Range
-        ref={this.rangeEl}
         min={900000}
         max={19000000}
         defaultValue={[900000, 19000000]}
-        handle={this.customHandle}
         step={10000}
+        ref={this.rangeEl}
+        handle={this.customHandle}
       />
     );
   }
