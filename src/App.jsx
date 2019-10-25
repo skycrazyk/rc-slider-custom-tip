@@ -44,7 +44,7 @@ const CustomHandle = props => {
   if (rangeEl && rangeEl.current) {
     const rangeBounds = rangeEl.current.sliderRef.getBoundingClientRect();
 
-    if (tooltipMinEl) {
+    if (isMin && tooltipMinEl) {
       const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
 
       const tooltipShowValueEl = tooltipMinEl.querySelector(
@@ -57,18 +57,45 @@ const CustomHandle = props => {
 
       const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
 
-      if (rangeBounds.x >= tooltipMinElBounds.x) {
-        // console.log(rangeBounds.x, tooltipWrapMinElBounds.x);
+      if (rangeBounds.left >= tooltipMinElBounds.left) {
         tooltipShowValueEl.style = [
           'position: fixed',
-          `top: ${tooltipHideValueElBounds.y}px`,
-          `left: ${rangeBounds.x}px`,
+          `top: ${tooltipHideValueElBounds.top}px`,
+          `left: ${rangeBounds.left}px`,
         ].join(';');
       } else {
         tooltipShowValueEl.style = [
           `position: absolute`,
           'top: 0',
           'left: 0',
+        ].join(';');
+      }
+    }
+
+    if (!isMin && tooltipMaxEl) {
+      const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
+
+      const tooltipShowValueEl = tooltipMaxEl.querySelector(
+        '.rc-slider-tooltip-show-value'
+      );
+
+      const tooltipHideValueEl = tooltipMaxEl.querySelector(
+        '.rc-slider-tooltip-hide-value'
+      );
+
+      const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
+
+      if (rangeBounds.right <= tooltipMaxElBounds.right) {
+        tooltipShowValueEl.style = [
+          'position: fixed',
+          `top: ${tooltipHideValueElBounds.top}px`,
+          `left: ${rangeBounds.right - tooltipHideValueElBounds.width}px`,
+        ].join(';');
+      } else {
+        tooltipShowValueEl.style = [
+          `position: absolute`,
+          'top: 0',
+          'right: 0',
         ].join(';');
       }
     }
