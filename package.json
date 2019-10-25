@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot=true --open",
     "build": "webpack",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "author": "",
   "license": "ISC",
