@@ -260,9 +260,8 @@ const App = () => {
       ref={rangeEl}
       min={900000}
       max={19000000}
-      defaultValue={[1500000, 10000000]}
+      defaultValue={[900000, 19000000]}
       handle={CustomHandle}
-      onChange={onChange}
       step={10000}
     />
   );
