@@ -43,9 +43,6 @@ const CustomHandle = props => {
   const isMin = index === 0;
 
   if (rangeEl && rangeEl.current) {
-    let isMinFixed;
-    let isMaxFixed;
-
     const rangeBounds = rangeEl.current.sliderRef.getBoundingClientRect();
 
     // Относительно левого края
@@ -176,18 +173,32 @@ const CustomHandle = props => {
 
           const half = diff / 2;
 
+          // Ближе к левому краю
+          const minFixed =
+            tooltipMinHideValueElBounds.left - half < rangeBounds.left;
+
+          // Ближе к правому краю
+          const maxFixed =
+            tooltipMaxHideValueElBounds.right + half > rangeBounds.right;
+
           // Сдвигаем левый тултип
           tooltipMinShowValueEl.style = [
             'position: fixed',
             `top: ${tooltipMinHideValueElBounds.top}px`,
-            `left: ${tooltipMinHideValueElBounds.left - half}px`,
+            `left: ${Math.max(
+              tooltipMinHideValueElBounds.left - half,
+              rangeBounds.left
+            )}px`,
           ].join(';');
 
           // Сдвигаем правый тутлип
           tooltipMaxShowValueEl.style = [
             'position: fixed',
             `top: ${tooltipMaxHideValueElBounds.top}px`,
-            `left: ${tooltipMaxHideValueElBounds.left + half}px`,
+            `left: ${Math.max(
+              tooltipMaxHideValueElBounds.left + half,
+              tooltipMinShowValueElBounds.right + space
+            )}px`,
           ].join(';');
         }
       }
