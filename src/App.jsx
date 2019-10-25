@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Fragment } from 'react';
+import React, { useRef } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Range, Handle } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
@@ -6,29 +6,12 @@ import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './style';
 
-/**
- * Идея:
- * 1. Получаем доступ к dom элементам: слайдеру и tooltip`ам +
- * 2. При событии движение ползунка или изменении размера экрана:
- * 2.1 Сравниваем позиции ползунков относительно граница слайдера и в зависимости от этого
- * меняем значение параметра placement.
- * 2.2 Сравниваем позиции ползунков м/у собой и в зависимости от этого меняем значение
- * параметра placement
- */
 const space = 10;
 const tooltipIdMin = 'tooltipIdMin'; // генерировать guid
 const tooltipIdMax = 'tooltipIdMax'; // генерировать guid
 let tooltipMinEl;
 let tooltipMaxEl;
 let rangeEl;
-
-const onChange = () => {
-  // console.dir(rangeEl.current.handlesRefs);
-  // console.dir(rangeEl.current.sliderRef);
-  // console.log(tooltipMinEl, tooltipMaxEl);
-  // console.dir(tooltipMinEl.getBoundingClientRect().x);
-  // console.dir(rangeEl.current.sliderRef.getBoundingClientRect().x);
-};
 
 // Получаем доступ к DOM элементам
 const onPopupAlign = () => {
@@ -173,32 +156,62 @@ const CustomHandle = props => {
 
           const half = diff / 2;
 
-          // Ближе к левому краю
           const minFixed =
             tooltipMinHideValueElBounds.left - half < rangeBounds.left;
 
-          // Ближе к правому краю
           const maxFixed =
             tooltipMaxHideValueElBounds.right + half > rangeBounds.right;
+
+          console.log(maxFixed);
+
+          let tooltipMinLeft = tooltipMinHideValueElBounds.left - half;
+          let tooltipMaxLeft = tooltipMaxHideValueElBounds.left + half;
+
+          // Ближе к левому краю
+          if (minFixed) {
+            // позиция левого бегунка
+            tooltipMinLeft = Math.max(
+              tooltipMinHideValueElBounds.left - half,
+              rangeBounds.left
+            );
+
+            // позиция правого бегунка
+            tooltipMaxLeft = Math.max(
+              tooltipMaxHideValueElBounds.left + half,
+              tooltipMinShowValueElBounds.right + space
+            );
+          }
+
+          // Ближе к правому краю
+          if (maxFixed) {
+            // позиция левого бегунка
+            tooltipMinLeft = Math.min(
+              tooltipMinHideValueElBounds.left - half,
+              rangeBounds.right -
+                tooltipMinHideValueElBounds.width -
+                tooltipMaxHideValueElBounds.width -
+                space
+            );
+
+            // позиция правого бегунка
+            tooltipMaxLeft = Math.min(
+              tooltipMaxHideValueElBounds.left + half,
+              rangeBounds.right - tooltipMinHideValueElBounds.width
+            );
+          }
 
           // Сдвигаем левый тултип
           tooltipMinShowValueEl.style = [
             'position: fixed',
             `top: ${tooltipMinHideValueElBounds.top}px`,
-            `left: ${Math.max(
-              tooltipMinHideValueElBounds.left - half,
-              rangeBounds.left
-            )}px`,
+            `left: ${tooltipMinLeft}px`,
           ].join(';');
 
           // Сдвигаем правый тутлип
           tooltipMaxShowValueEl.style = [
             'position: fixed',
             `top: ${tooltipMaxHideValueElBounds.top}px`,
-            `left: ${Math.max(
-              tooltipMaxHideValueElBounds.left + half,
-              tooltipMinShowValueElBounds.right + space
-            )}px`,
+            `left: ${tooltipMaxLeft}px`,
           ].join(';');
         }
       }
