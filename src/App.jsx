@@ -15,6 +15,13 @@ class App extends Component {
           style={{ marginBottom: 100 }}
         />
         <Range
+          min={1}
+          max={5}
+          defaultValue={[1, 5]}
+          space={10}
+          style={{ marginBottom: 100 }}
+        />
+        <Range
           min={900000}
           max={19000000}
           defaultValue={[900000, 19000000]}

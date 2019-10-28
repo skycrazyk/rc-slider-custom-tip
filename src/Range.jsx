@@ -204,20 +204,27 @@ export default class Range extends Component {
           // У левого края
           if (rangeBounds.left >= tooltipMinElBounds.left) {
             tooltipMaxShowValueEl.style = [
-              'position: fixed',
-              `top: ${tooltipMaxHideValueElBounds.top}px`,
-              `left: ${tooltipMinShowValueElBounds.right + space}px`,
+              'position: absolute',
+              'top: 0px',
+              `left: ${tooltipMinShowValueElBounds.right +
+                space -
+                tooltipMaxShowValueElBounds.left}px`,
             ].join(';');
           }
 
           // У правого края
           else if (rangeBounds.right <= tooltipMaxElBounds.right) {
+            console.log(
+              tooltipMinHideValueElBounds.right,
+              tooltipMaxShowValueElBounds.left - space,
+              tooltipMinHideValueElBounds.right -
+                (tooltipMaxShowValueElBounds.left - space)
+            );
             tooltipMinShowValueEl.style = [
-              'position: fixed',
-              `top: ${tooltipMinHideValueElBounds.top}px`,
-              `left: ${tooltipMaxShowValueElBounds.left -
-                tooltipMinShowValueElBounds.width -
-                space}px`,
+              'position: absolute',
+              'top: 0px',
+              `left: -${tooltipMinHideValueElBounds.right -
+                (tooltipMaxShowValueElBounds.left - space)}px`,
             ].join(';');
           }
 
