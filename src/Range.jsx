@@ -24,6 +24,7 @@ export default class Range extends Component {
     this.customHandle = this.customHandle.bind(this);
     this.onPopupAlign = this.onPopupAlign.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
+    this.updatePushablePixels = this.updatePushablePixels(this);
     this.onChange = this.onChange.bind(this);
   }
 
@@ -78,6 +79,12 @@ export default class Range extends Component {
   }
 
   componentDidUpdate() {
+    this.updatePushablePixels();
+
+    this.updateTooltipPosition();
+  }
+
+  updatePushablePixels() {
     const { min, max, pushablePixels } = this.props;
     const { pushablePixels: pushablePixelsState } = this.state;
 
@@ -91,8 +98,6 @@ export default class Range extends Component {
       const onePixelConsist = (max - min) / rangeBounds.width;
       this.setState({ pushablePixels: pushablePixels * onePixelConsist });
     }
-
-    this.updateTooltipPosition();
   }
 
   updateTooltipPosition() {
@@ -214,12 +219,6 @@ export default class Range extends Component {
 
           // У правого края
           else if (rangeBounds.right <= tooltipMaxElBounds.right) {
-            console.log(
-              tooltipMinHideValueElBounds.right,
-              tooltipMaxShowValueElBounds.left - space,
-              tooltipMinHideValueElBounds.right -
-                (tooltipMaxShowValueElBounds.left - space)
-            );
             tooltipMinShowValueEl.style = [
               'position: absolute',
               'top: 0px',
@@ -243,47 +242,44 @@ export default class Range extends Component {
             const maxFixed =
               tooltipMaxHideValueElBounds.right + half > rangeBounds.right;
 
-            let tooltipMinLeft = half;
+            let tooltipMinLeft = -half;
             let tooltipMaxLeft = half;
 
             // Ближе к левому краю
             if (minFixed) {
               // позиция левого бегунка
-              tooltipMinLeft = Math.max(
-                tooltipMinHideValueElBounds.left - half,
-                rangeBounds.left
-              );
+              tooltipMinLeft =
+                rangeBounds.left - tooltipMinHideValueElBounds.left;
 
               // позиция правого бегунка
-              tooltipMaxLeft = Math.max(
-                tooltipMaxHideValueElBounds.left + half,
-                tooltipMinShowValueElBounds.right + space
-              );
+              tooltipMaxLeft =
+                tooltipMinLeft +
+                tooltipMinShowValueElBounds.right -
+                tooltipMaxHideValueElBounds.left +
+                space;
             }
 
             // Ближе к правому краю
             if (maxFixed) {
               // позиция левого бегунка
-              tooltipMinLeft = Math.min(
-                tooltipMinHideValueElBounds.left - half,
-                rangeBounds.right -
-                  tooltipMinHideValueElBounds.width -
-                  tooltipMaxHideValueElBounds.width -
-                  space
-              );
-
+              // tooltipMinLeft = Math.min(
+              //   tooltipMinHideValueElBounds.left - half,
+              //   rangeBounds.right -
+              //     tooltipMinHideValueElBounds.width -
+              //     tooltipMaxHideValueElBounds.width -
+              //     space
+              // );
+              console.log('here');
               // позиция правого бегунка
-              tooltipMaxLeft = Math.min(
-                tooltipMaxHideValueElBounds.left + half,
-                rangeBounds.right - tooltipMinHideValueElBounds.width
-              );
+              tooltipMaxLeft =
+                tooltipMaxHideValueElBounds.right + half - rangeBounds.right;
             }
 
             // Сдвигаем левый тултип
             tooltipMinShowValueEl.style = [
               'position: absolute',
               'top: 0px',
-              `left: -${tooltipMinLeft}px`,
+              `left: ${tooltipMinLeft}px`,
             ].join(';');
 
             // Сдвигаем правый тутлип
