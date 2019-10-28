@@ -10,7 +10,7 @@ export default class Range extends Component {
   constructor(props) {
     super(props);
 
-    const { pushablePercent, pushablePixels, min, max } = props;
+    const { pushablePercent, min, max } = props;
 
     this.state = {
       tooltipMinEl: null,
