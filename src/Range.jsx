@@ -243,8 +243,8 @@ export default class Range extends Component {
             const maxFixed =
               tooltipMaxHideValueElBounds.right + half > rangeBounds.right;
 
-            let tooltipMinLeft = tooltipMinHideValueElBounds.left - half;
-            let tooltipMaxLeft = tooltipMaxHideValueElBounds.left + half;
+            let tooltipMinLeft = half;
+            let tooltipMaxLeft = half;
 
             // Ближе к левому краю
             if (minFixed) {
@@ -281,15 +281,15 @@ export default class Range extends Component {
 
             // Сдвигаем левый тултип
             tooltipMinShowValueEl.style = [
-              'position: fixed',
-              `top: ${tooltipMinHideValueElBounds.top}px`,
-              `left: ${tooltipMinLeft}px`,
+              'position: absolute',
+              'top: 0px',
+              `left: -${tooltipMinLeft}px`,
             ].join(';');
 
             // Сдвигаем правый тутлип
             tooltipMaxShowValueEl.style = [
-              'position: fixed',
-              `top: ${tooltipMaxHideValueElBounds.top}px`,
+              'position: absolute',
+              'top: 0px',
               `left: ${tooltipMaxLeft}px`,
             ].join(';');
           }
