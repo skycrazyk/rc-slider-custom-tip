@@ -10,9 +10,12 @@ export default class Range extends Component {
   constructor(props) {
     super(props);
 
+    const { pushablePercent, pushablePixels, min, max } = props;
+
     this.state = {
       tooltipMinEl: null,
       tooltipMaxEl: null,
+      pushablePercent: pushablePercent && ((max - min) / 100) * pushablePercent,
     };
 
     this.rangeEl = createRef();
@@ -20,6 +23,7 @@ export default class Range extends Component {
     this.tooltipIdMax = nanoid();
     this.customHandle = this.customHandle.bind(this);
     this.onPopupAlign = this.onPopupAlign.bind(this);
+    this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
@@ -74,7 +78,24 @@ export default class Range extends Component {
   }
 
   componentDidUpdate() {
-    console.log('update');
+    const { min, max, pushablePixels } = this.props;
+    const { pushablePixels: pushablePixelsState } = this.state;
+
+    if (
+      this.rangeEl &&
+      this.rangeEl.current &&
+      pushablePixels &&
+      !pushablePixelsState
+    ) {
+      const rangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+      const onePixelConsist = (max - min) / rangeBounds.width;
+      this.setState({ pushablePixels: pushablePixels * onePixelConsist });
+    }
+
+    this.updateTooltipPosition();
+  }
+
+  updateTooltipPosition() {
     const { space } = this.props;
     const { tooltipMinEl, tooltipMaxEl } = this.state;
 
@@ -134,7 +155,7 @@ export default class Range extends Component {
           tooltipShowValueEl.style = [
             'position: absolute',
             'top: 0',
-            'right: 0',
+            'left: 0',
           ].join(';');
         }
       }
@@ -271,10 +292,16 @@ export default class Range extends Component {
   }
 
   onChange(value) {
+    const { onChange } = this.props;
     this.setState({ value });
+    onChange && onChange(value);
   }
 
   render() {
+    const { pushablePercent, pushablePixels } = this.state;
+
+    const pushable = pushablePercent || pushablePixels;
+
     return (
       <div className="container">
         <RcRange
@@ -282,6 +309,7 @@ export default class Range extends Component {
           ref={this.rangeEl}
           handle={this.customHandle}
           onChange={this.onChange}
+          {...(pushable && { pushable })}
         />
       </div>
     );

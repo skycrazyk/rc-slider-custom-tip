@@ -18,8 +18,16 @@ class App extends Component {
           min={900000}
           max={19000000}
           defaultValue={[900000, 19000000]}
-          step={10000}
           space={10}
+          style={{ marginBottom: 100 }}
+        />
+        <Range
+          min={1000}
+          max={10000}
+          defaultValue={[1000, 10000]}
+          space={10}
+          allowCross={false}
+          pushablePercent={3}
         />
       </>
     );
