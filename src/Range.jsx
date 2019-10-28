@@ -24,7 +24,7 @@ export default class Range extends Component {
     this.customHandle = this.customHandle.bind(this);
     this.onPopupAlign = this.onPopupAlign.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
-    this.updatePushablePixels = this.updatePushablePixels(this);
+    this.updatePushablePixels = this.updatePushablePixels.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
@@ -80,7 +80,6 @@ export default class Range extends Component {
 
   componentDidUpdate() {
     this.updatePushablePixels();
-
     this.updateTooltipPosition();
   }
 
@@ -204,7 +203,8 @@ export default class Range extends Component {
         // Логика позиционирования
         if (
           tooltipMinShowValueElBounds.right + space >=
-          tooltipMaxShowValueElBounds.left
+            tooltipMaxShowValueElBounds.left &&
+          space
         ) {
           // У левого края
           if (rangeBounds.left >= tooltipMinElBounds.left) {
@@ -261,18 +261,17 @@ export default class Range extends Component {
 
             // Ближе к правому краю
             if (maxFixed) {
-              // позиция левого бегунка
-              // tooltipMinLeft = Math.min(
-              //   tooltipMinHideValueElBounds.left - half,
-              //   rangeBounds.right -
-              //     tooltipMinHideValueElBounds.width -
-              //     tooltipMaxHideValueElBounds.width -
-              //     space
-              // );
-              console.log('here');
               // позиция правого бегунка
               tooltipMaxLeft =
-                tooltipMaxHideValueElBounds.right + half - rangeBounds.right;
+                half -
+                (tooltipMaxHideValueElBounds.right + half - rangeBounds.right);
+
+              // позиция левого бегунка
+              tooltipMinLeft =
+                tooltipMaxShowValueElBounds.left -
+                space -
+                tooltipMinHideValueElBounds.right +
+                tooltipMaxLeft;
             }
 
             // Сдвигаем левый тултип
@@ -306,19 +305,13 @@ export default class Range extends Component {
     const pushable = pushablePercent || pushablePixels;
 
     return (
-      <div className="container">
-        <RcRange
-          {...this.props}
-          ref={this.rangeEl}
-          handle={this.customHandle}
-          onChange={this.onChange}
-          {...(pushable && { pushable })}
-        />
-      </div>
+      <RcRange
+        {...this.props}
+        ref={this.rangeEl}
+        handle={this.customHandle}
+        onChange={this.onChange}
+        {...(pushable && { pushable })}
+      />
     );
   }
 }
-
-Range.defaultProps = {
-  space: 10,
-};
