@@ -20,19 +20,69 @@ export default class Range extends Component {
     this.tooltipIdMax = nanoid();
     this.customHandle = this.customHandle.bind(this);
     this.onPopupAlign = this.onPopupAlign.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   customHandle(props) {
-    const { space } = this.props;
-    const { tooltipMinEl, tooltipMaxEl } = this.state;
     const { value, dragging, index, ...restProps } = props;
     const isMin = index === 0;
+
+    return (
+      <Tooltip
+        id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
+        prefixCls="rc-slider-tooltip"
+        overlay={
+          <>
+            <div
+              className="rc-slider-tooltip-value rc-slider-tooltip-hide-value"
+              style={{ visibility: 'hidden' }}
+            >
+              {value}
+            </div>
+            <div
+              className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}
+            >
+              {value}
+            </div>
+          </>
+        }
+        visible={true}
+        placement="bottom"
+        key={index}
+        onPopupAlign={this.onPopupAlign}
+      >
+        <Handle value={value} {...restProps} />
+      </Tooltip>
+    );
+  }
+
+  // Получаем доступ к DOM элементам
+  onPopupAlign() {
+    const { tooltipMinEl, tooltipMaxEl } = this.state;
+
+    if (!tooltipMinEl && !tooltipMaxEl) {
+      this.setState({
+        tooltipMinEl: document.getElementById(this.tooltipIdMin),
+        tooltipMaxEl: document.getElementById(this.tooltipIdMax),
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    console.log('update');
+    const { space } = this.props;
+    const { tooltipMinEl, tooltipMaxEl } = this.state;
 
     if (this.rangeEl && this.rangeEl.current) {
       const rangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
 
       // Относительно левого края
-      if (isMin && tooltipMinEl) {
+      if (tooltipMinEl) {
         const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
 
         const tooltipShowValueEl = tooltipMinEl.querySelector(
@@ -47,9 +97,9 @@ export default class Range extends Component {
 
         if (rangeBounds.left >= tooltipMinElBounds.left) {
           tooltipShowValueEl.style = [
-            'position: fixed',
-            `top: ${tooltipHideValueElBounds.top}px`,
-            `left: ${rangeBounds.left}px`,
+            'position: absolute',
+            'top: 0px',
+            `left: ${rangeBounds.left - tooltipHideValueElBounds.left}px`,
           ].join(';');
         } else {
           tooltipShowValueEl.style = [
@@ -61,7 +111,7 @@ export default class Range extends Component {
       }
 
       // Относительно правого края
-      if (!isMin && tooltipMaxEl) {
+      if (tooltipMaxEl) {
         const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
 
         const tooltipShowValueEl = tooltipMaxEl.querySelector(
@@ -76,13 +126,13 @@ export default class Range extends Component {
 
         if (rangeBounds.right <= tooltipMaxElBounds.right) {
           tooltipShowValueEl.style = [
-            'position: fixed',
-            `top: ${tooltipHideValueElBounds.top}px`,
-            `left: ${rangeBounds.right - tooltipHideValueElBounds.width}px`,
+            'position: absolute',
+            'top: 0px',
+            `left: -${tooltipHideValueElBounds.right - rangeBounds.right}px`,
           ].join(';');
         } else {
           tooltipShowValueEl.style = [
-            `position: absolute`,
+            'position: absolute',
             'top: 0',
             'right: 0',
           ].join(';');
@@ -218,51 +268,10 @@ export default class Range extends Component {
         }
       }
     }
-
-    return (
-      <Tooltip
-        id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
-        prefixCls="rc-slider-tooltip"
-        overlay={
-          <>
-            <div
-              className="rc-slider-tooltip-value rc-slider-tooltip-hide-value"
-              style={{ visibility: 'hidden' }}
-            >
-              {value}
-            </div>
-            <div
-              className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-              }}
-            >
-              {value}
-            </div>
-          </>
-        }
-        visible={true}
-        placement="bottom"
-        key={index}
-        onPopupAlign={this.onPopupAlign}
-      >
-        <Handle value={value} {...restProps} />
-      </Tooltip>
-    );
   }
 
-  // Получаем доступ к DOM элементам
-  onPopupAlign() {
-    const { tooltipMinEl, tooltipMaxEl } = this.state;
-
-    if (!tooltipMinEl && !tooltipMaxEl) {
-      this.setState({
-        tooltipMinEl: document.getElementById(this.tooltipIdMin),
-        tooltipMaxEl: document.getElementById(this.tooltipIdMax),
-      });
-    }
+  onChange(value) {
+    this.setState({ value });
   }
 
   render() {
@@ -272,6 +281,7 @@ export default class Range extends Component {
           {...this.props}
           ref={this.rangeEl}
           handle={this.customHandle}
+          onChange={this.onChange}
         />
       </div>
     );

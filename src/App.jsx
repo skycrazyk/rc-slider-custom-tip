@@ -11,7 +11,7 @@ class App extends Component {
           max={2019}
           defaultValue={[2014, 2019]}
           step={1}
-          space={0}
+          space={10}
           style={{ marginBottom: 100 }}
         />
         <Range
