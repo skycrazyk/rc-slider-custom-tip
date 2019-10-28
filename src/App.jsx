@@ -6,19 +6,7 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <h2>Значения могут накладываясь друг на друга</h2>
-        <pre>
-          {`<Range
-  min={2010}
-  max={2019}
-  defaultValue={[2010, 2019]}
-  step={1}
-/>`}
-        </pre>
-        <Range min={2010} max={2019} defaultValue={[2014, 2015]} step={1} />
-        <h2 style={{ marginTop: 100 }}>
-          Значения могут не накладываясь друг на друга
-        </h2>
+        <h2>Значения могут не накладываться друг на друга</h2>
         <p>
           Параметр <code>space</code> определяет расстояние в <code>px</code>{' '}
           между значениями
@@ -74,6 +62,18 @@ class App extends Component {
           allowCross={false}
           pushablePixels={15}
         />
+        <h2 style={{ marginTop: 100 }}>
+          Значения могут накладываться друг на друга
+        </h2>
+        <pre>
+          {`<Range
+  min={2010}
+  max={2019}
+  defaultValue={[2010, 2019]}
+  step={1}
+/>`}
+        </pre>
+        <Range min={2010} max={2019} defaultValue={[2014, 2015]} step={1} />
       </div>
     );
   }
