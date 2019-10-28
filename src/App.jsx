@@ -72,7 +72,7 @@ class App extends Component {
           defaultValue={[30000, 90000]}
           space={10}
           allowCross={false}
-          pushablePixels={30}
+          pushablePixels={15}
         />
       </div>
     );
