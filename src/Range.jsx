@@ -272,8 +272,8 @@ export default class Range extends Component {
 
   onChange(value) {
     const { onChange } = this.props;
-    this.setState({ value });
     onChange && onChange(value);
+    this.forceUpdate();
   }
 
   render() {
