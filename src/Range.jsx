@@ -158,23 +158,19 @@ export default class Range extends Component {
             tooltipMinHideValueElBounds.right + space >=
               tooltipMaxShowValueElBounds.left);
 
-        let tooltipMinLeft;
-        let tooltipMaxLeft;
+        let tooltipMinLeft = 0;
+        let tooltipMaxLeft = 0;
 
         if (!isIntersection) {
           if (rangeBounds.left >= tooltipMinElBounds.left) {
             tooltipMinLeft =
               rangeBounds.left - tooltipMinHideValueElBounds.left;
-          } else {
-            tooltipMinLeft = 0;
           }
 
           if (rangeBounds.right <= tooltipMaxElBounds.right) {
             tooltipMaxLeft = -(
               tooltipMaxHideValueElBounds.right - rangeBounds.right
             );
-          } else {
-            tooltipMaxLeft = 0;
           }
         }
 
@@ -250,6 +246,22 @@ export default class Range extends Component {
                 space -
                 tooltipMinHideValueElBounds.right;
             }
+          }
+        }
+
+        // Работа без space
+        if (!space) {
+          // Левый бегунок у правого края
+          if (rangeBounds.right <= tooltipMinElBounds.right) {
+            tooltipMinLeft = -(
+              tooltipMinHideValueElBounds.right - rangeBounds.right
+            );
+          }
+
+          // Правый бегунок у левого края
+          if (rangeBounds.left >= tooltipMaxElBounds.left) {
+            tooltipMaxLeft =
+              rangeBounds.left - tooltipMaxHideValueElBounds.left;
           }
         }
 
