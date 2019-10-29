@@ -42,24 +42,15 @@ export default class Range extends Component {
         id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
         prefixCls="rc-slider-tooltip"
         overlay={
-          <>
-            <div
-              className="rc-slider-tooltip-value rc-slider-tooltip-hide-value"
-              style={{ visibility: 'hidden' }}
-            >
-              {value}
-            </div>
-            <div
-              className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-              }}
-            >
-              {value}
-            </div>
-          </>
+          <div
+            className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
+            style={{
+              position: 'relative',
+              left: 0,
+            }}
+          >
+            {value}
+          </div>
         }
         visible={true}
         placement="bottom"
@@ -111,16 +102,19 @@ export default class Range extends Component {
         1: { handle: handlerMax },
       } = this.rangeEl.current.handlesRefs;
 
+      const handlerMinBounds = handlerMin.getBoundingClientRect();
+
+      const handleMinCenter =
+        handlerMinBounds.left + handlerMinBounds.width / 2;
+
+      const handlerMaxBounds = handlerMax.getBoundingClientRect();
+
+      const handleMaxCenter =
+        handlerMaxBounds.left + handlerMaxBounds.width / 2;
+
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок
         const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
-
-        // Левый бегунок - скрытое значение
-        const tooltipMinHideValueEl = tooltipMinEl.querySelector(
-          '.rc-slider-tooltip-hide-value'
-        );
-
-        const tooltipMinHideValueElBounds = tooltipMinHideValueEl.getBoundingClientRect();
 
         // Левый бегунок - видимое значение
         const tooltipMinShowValueEl = tooltipMinEl.querySelector(
@@ -129,15 +123,16 @@ export default class Range extends Component {
 
         const tooltipMinShowValueElBounds = tooltipMinShowValueEl.getBoundingClientRect();
 
+        // Левый бегунок - потенциальное значение
+        const tooltipMinHalfWidth = tooltipMinShowValueElBounds.width / 2;
+
+        const tooltipMinHideBounds = {
+          left: handleMinCenter - tooltipMinHalfWidth,
+          right: handleMinCenter + tooltipMinHalfWidth,
+        };
+
         // Правый бегунок
         const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
-
-        // Правый бегунок - скрытое значение
-        const tooltipMaxHideValueEl = tooltipMaxEl.querySelector(
-          '.rc-slider-tooltip-hide-value'
-        );
-
-        const tooltipMaxHideValueElBounds = tooltipMaxHideValueEl.getBoundingClientRect();
 
         // Правый бегунок - видимое значение
         const tooltipMaxShowValueEl = tooltipMaxEl.querySelector(
@@ -146,16 +141,23 @@ export default class Range extends Component {
 
         const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
 
-        // Пересечение? // Тут наверно нужно оптимизировать условие
+        // Правый бегунок - потенциальное значение
+        const tooltipMaxHalfWidth = tooltipMaxShowValueElBounds.width / 2;
+
+        const tooltipMaxHideBounds = {
+          left: handleMaxCenter - tooltipMaxHalfWidth,
+          right: handleMaxCenter + tooltipMaxHalfWidth,
+        };
+
+        // Пересечение? Тут наверно нужно оптимизировать условие :)
         const isIntersection =
           space &&
-          (tooltipMinHideValueElBounds.right + space >=
-            tooltipMaxHideValueElBounds.left ||
+          (tooltipMinHideBounds.right + space >= tooltipMaxHideBounds.left ||
             tooltipMinShowValueElBounds.right + space >=
               tooltipMaxShowValueElBounds.left ||
             tooltipMinShowValueElBounds.right + space >=
-              tooltipMaxHideValueElBounds.left ||
-            tooltipMinHideValueElBounds.right + space >=
+              tooltipMaxHideBounds.left ||
+            tooltipMinHideBounds.right + space >=
               tooltipMaxShowValueElBounds.left);
 
         let tooltipMinLeft = 0;
@@ -163,14 +165,11 @@ export default class Range extends Component {
 
         if (!isIntersection) {
           if (rangeBounds.left >= tooltipMinElBounds.left) {
-            tooltipMinLeft =
-              rangeBounds.left - tooltipMinHideValueElBounds.left;
+            tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left;
           }
 
           if (rangeBounds.right <= tooltipMaxElBounds.right) {
-            tooltipMaxLeft = -(
-              tooltipMaxHideValueElBounds.right - rangeBounds.right
-            );
+            tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
           }
         }
 
@@ -178,44 +177,39 @@ export default class Range extends Component {
         if (isIntersection) {
           if (rangeBounds.left >= tooltipMinElBounds.left) {
             // У левого края - min
-            tooltipMinLeft =
-              rangeBounds.left - tooltipMinHideValueElBounds.left;
+            tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left;
 
             // У левого края - max
             tooltipMaxLeft =
               tooltipMinShowValueElBounds.right +
               space -
-              tooltipMaxHideValueElBounds.left;
+              tooltipMaxHideBounds.left;
           }
 
           // У правого края
           else if (rangeBounds.right <= tooltipMaxElBounds.right) {
             // У правого края - min
             tooltipMinLeft = -(
-              tooltipMinHideValueElBounds.right -
+              tooltipMinHideBounds.right -
               (tooltipMaxShowValueElBounds.left - space)
             );
 
             // У правого края - max
-            tooltipMaxLeft = -(
-              tooltipMaxHideValueElBounds.right - rangeBounds.right
-            );
+            tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
           }
 
           // В центре
           else {
             const diff =
-              tooltipMinHideValueElBounds.right +
-              space -
-              tooltipMaxHideValueElBounds.left;
+              tooltipMinHideBounds.right + space - tooltipMaxHideBounds.left;
 
             const half = diff / 2;
 
             const minFixed =
-              tooltipMinHideValueElBounds.left - half < rangeBounds.left;
+              tooltipMinHideBounds.left - half < rangeBounds.left;
 
             const maxFixed =
-              tooltipMaxHideValueElBounds.right + half > rangeBounds.right;
+              tooltipMaxHideBounds.right + half > rangeBounds.right;
 
             tooltipMinLeft = -half;
             tooltipMaxLeft = half;
@@ -223,13 +217,12 @@ export default class Range extends Component {
             // Ближе к левому краю
             if (minFixed) {
               // позиция левого бегунка
-              tooltipMinLeft =
-                rangeBounds.left - tooltipMinHideValueElBounds.left;
+              tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left;
 
               // позиция правого бегунка
               tooltipMaxLeft =
                 tooltipMinShowValueElBounds.right -
-                tooltipMaxHideValueElBounds.left +
+                tooltipMaxHideBounds.left +
                 space;
             }
 
@@ -237,14 +230,13 @@ export default class Range extends Component {
             if (maxFixed) {
               // позиция правого бегунка
               tooltipMaxLeft =
-                half -
-                (tooltipMaxHideValueElBounds.right + half - rangeBounds.right);
+                half - (tooltipMaxHideBounds.right + half - rangeBounds.right);
 
               // позиция левого бегунка
               tooltipMinLeft =
                 tooltipMaxShowValueElBounds.left -
                 space -
-                tooltipMinHideValueElBounds.right;
+                tooltipMinHideBounds.right;
             }
           }
         }
@@ -253,29 +245,24 @@ export default class Range extends Component {
         if (!space) {
           // Левый бегунок у правого края
           if (rangeBounds.right <= tooltipMinElBounds.right) {
-            tooltipMinLeft = -(
-              tooltipMinHideValueElBounds.right - rangeBounds.right
-            );
+            tooltipMinLeft = -(tooltipMinHideBounds.right - rangeBounds.right);
           }
 
           // Правый бегунок у левого края
           if (rangeBounds.left >= tooltipMaxElBounds.left) {
-            tooltipMaxLeft =
-              rangeBounds.left - tooltipMaxHideValueElBounds.left;
+            tooltipMaxLeft = rangeBounds.left - tooltipMaxHideBounds.left;
           }
         }
 
         // Сдвигаем левый тултип
         tooltipMinShowValueEl.style = [
-          'position: absolute',
-          'top: 0px',
+          'position: relative',
           `left: ${tooltipMinLeft}px`,
         ].join(';');
 
         // Сдвигаем правый тутлип
         tooltipMaxShowValueEl.style = [
-          'position: absolute',
-          'top: 0px',
+          'position: relative',
           `left: ${tooltipMaxLeft}px`,
         ].join(';');
       }
