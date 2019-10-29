@@ -206,7 +206,7 @@ export default class Range extends Component {
 
         const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
 
-        // Пересечение?
+        // Пересечение? // Тут наверно нужно оптимизировать условие
         const isIntersection =
           space &&
           (tooltipMinHideValueElBounds.right + space >=
@@ -217,13 +217,6 @@ export default class Range extends Component {
               tooltipMaxHideValueElBounds.left ||
             tooltipMinHideValueElBounds.right + space >=
               tooltipMaxShowValueElBounds.left);
-
-        console.log(
-          tooltipMinHideValueElBounds.right + space >=
-            tooltipMaxHideValueElBounds.left,
-          tooltipMinShowValueElBounds.right + space >=
-            tooltipMaxShowValueElBounds.left
-        );
 
         if (!isIntersection) {
           if (rangeBounds.left >= tooltipMinElBounds.left) {
@@ -258,8 +251,15 @@ export default class Range extends Component {
 
         // Логика позиционирования при пересечении
         if (isIntersection) {
-          // У левого края
           if (rangeBounds.left >= tooltipMinElBounds.left) {
+            // У левого края - min
+            tooltipMinShowValueEl.style = [
+              'position: absolute',
+              'top: 0px',
+              `left: ${rangeBounds.left - tooltipMinHideValueElBounds.left}px`,
+            ].join(';');
+
+            // У левого края - max
             tooltipMaxShowValueEl.style = [
               'position: absolute',
               'top: 0px',
@@ -267,21 +267,24 @@ export default class Range extends Component {
                 space -
                 tooltipMaxHideValueElBounds.left}px`,
             ].join(';');
-
-            console.log(
-              tooltipMinShowValueElBounds.right +
-                space -
-                tooltipMaxHideValueElBounds.left
-            );
           }
 
           // У правого края
           else if (rangeBounds.right <= tooltipMaxElBounds.right) {
+            // У правого края - min
             tooltipMinShowValueEl.style = [
               'position: absolute',
               'top: 0px',
               `left: -${tooltipMinHideValueElBounds.right -
                 (tooltipMaxShowValueElBounds.left - space)}px`,
+            ].join(';');
+
+            // У правого края - max
+            tooltipMaxShowValueEl.style = [
+              'position: absolute',
+              'top: 0px',
+              `left: -${tooltipMaxHideValueElBounds.right -
+                rangeBounds.right}px`,
             ].join(';');
           }
 
@@ -311,7 +314,6 @@ export default class Range extends Component {
 
               // позиция правого бегунка
               tooltipMaxLeft =
-                tooltipMinLeft +
                 tooltipMinShowValueElBounds.right -
                 tooltipMaxHideValueElBounds.left +
                 space;
@@ -328,8 +330,7 @@ export default class Range extends Component {
               tooltipMinLeft =
                 tooltipMaxShowValueElBounds.left -
                 space -
-                tooltipMinHideValueElBounds.right +
-                tooltipMaxLeft;
+                tooltipMinHideValueElBounds.right;
             }
 
             // Сдвигаем левый тултип
