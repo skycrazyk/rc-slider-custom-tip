@@ -34,8 +34,5 @@ body {
 .rc-slider-tooltip-value {
   padding: 0px;
   border-radius: 0px;
-}
-
-.rc-slider-tooltip-show-value {
   color: black;
 }

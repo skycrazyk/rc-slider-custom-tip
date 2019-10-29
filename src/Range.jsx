@@ -43,7 +43,7 @@ export default class Range extends Component {
         prefixCls="rc-slider-tooltip"
         overlay={
           <div
-            className="rc-slider-tooltip-value rc-slider-tooltip-show-value"
+            className="rc-slider-tooltip-value"
             style={{
               position: 'relative',
               left: 0,
@@ -115,7 +115,7 @@ export default class Range extends Component {
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок - видимое значение
         const tooltipMinShowValueEl = tooltipMinEl.querySelector(
-          '.rc-slider-tooltip-show-value'
+          '.rc-slider-tooltip-value'
         );
 
         const tooltipMinShowValueElBounds = tooltipMinShowValueEl.getBoundingClientRect();
@@ -130,7 +130,7 @@ export default class Range extends Component {
 
         // Правый бегунок - видимое значение
         const tooltipMaxShowValueEl = tooltipMaxEl.querySelector(
-          '.rc-slider-tooltip-show-value'
+          '.rc-slider-tooltip-value'
         );
 
         const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
