@@ -106,6 +106,13 @@ export default class Range extends Component {
     if (this.rangeEl && this.rangeEl.current) {
       const rangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
 
+      const {
+        0: { handle: handlerMin },
+        1: { handle: handlerMax },
+      } = this.rangeEl.current.handlesRefs;
+
+      // console.log(handlerMin, handlerMax);
+
       // Относительно левого края
       if (tooltipMinEl) {
         const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
@@ -200,12 +207,13 @@ export default class Range extends Component {
 
         const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
 
-        // Логика позиционирования
-        if (
+        const isIntersection =
+          space &&
           tooltipMinShowValueElBounds.right + space >=
-            tooltipMaxShowValueElBounds.left &&
-          space
-        ) {
+            tooltipMaxShowValueElBounds.left;
+
+        // Логика позиционирования
+        if (isIntersection) {
           // У левого края
           if (rangeBounds.left >= tooltipMinElBounds.left) {
             tooltipMaxShowValueEl.style = [
