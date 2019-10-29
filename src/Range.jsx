@@ -114,14 +114,14 @@ export default class Range extends Component {
 
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок - видимое значение
-        const tooltipMinShowValueEl = tooltipMinEl.querySelector(
+        const tooltipMinValueEl = tooltipMinEl.querySelector(
           '.rc-slider-tooltip-value'
         );
 
-        const tooltipMinShowValueElBounds = tooltipMinShowValueEl.getBoundingClientRect();
+        const tooltipMinValueElBounds = tooltipMinValueEl.getBoundingClientRect();
 
         // Левый бегунок - потенциальное значение
-        const tooltipMinHalfWidth = tooltipMinShowValueElBounds.width / 2;
+        const tooltipMinHalfWidth = tooltipMinValueElBounds.width / 2;
 
         const tooltipMinHideBounds = {
           left: handleMinCenter - tooltipMinHalfWidth,
@@ -129,14 +129,14 @@ export default class Range extends Component {
         };
 
         // Правый бегунок - видимое значение
-        const tooltipMaxShowValueEl = tooltipMaxEl.querySelector(
+        const tooltipMaxValueEl = tooltipMaxEl.querySelector(
           '.rc-slider-tooltip-value'
         );
 
-        const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
+        const tooltipMaxValueElBounds = tooltipMaxValueEl.getBoundingClientRect();
 
         // Правый бегунок - потенциальное значение
-        const tooltipMaxHalfWidth = tooltipMaxShowValueElBounds.width / 2;
+        const tooltipMaxHalfWidth = tooltipMaxValueElBounds.width / 2;
 
         const tooltipMaxHideBounds = {
           left: handleMaxCenter - tooltipMaxHalfWidth,
@@ -147,12 +147,12 @@ export default class Range extends Component {
         const isIntersection =
           space &&
           (tooltipMinHideBounds.right + space >= tooltipMaxHideBounds.left ||
-            tooltipMinShowValueElBounds.right + space >=
-              tooltipMaxShowValueElBounds.left ||
-            tooltipMinShowValueElBounds.right + space >=
+            tooltipMinValueElBounds.right + space >=
+              tooltipMaxValueElBounds.left ||
+            tooltipMinValueElBounds.right + space >=
               tooltipMaxHideBounds.left ||
             tooltipMinHideBounds.right + space >=
-              tooltipMaxShowValueElBounds.left);
+              tooltipMaxValueElBounds.left);
 
         let tooltipMinLeft = 0;
         let tooltipMaxLeft = 0;
@@ -176,9 +176,7 @@ export default class Range extends Component {
 
             // У левого края - max
             tooltipMaxLeft =
-              tooltipMinShowValueElBounds.right +
-              space -
-              tooltipMaxHideBounds.left;
+              tooltipMinValueElBounds.right + space - tooltipMaxHideBounds.left;
           }
 
           // У правого края
@@ -186,7 +184,7 @@ export default class Range extends Component {
             // У правого края - min
             tooltipMinLeft = -(
               tooltipMinHideBounds.right -
-              (tooltipMaxShowValueElBounds.left - space)
+              (tooltipMaxValueElBounds.left - space)
             );
 
             // У правого края - max
@@ -216,7 +214,7 @@ export default class Range extends Component {
 
               // позиция правого бегунка
               tooltipMaxLeft =
-                tooltipMinShowValueElBounds.right -
+                tooltipMinValueElBounds.right -
                 tooltipMaxHideBounds.left +
                 space;
             }
@@ -229,7 +227,7 @@ export default class Range extends Component {
 
               // позиция левого бегунка
               tooltipMinLeft =
-                tooltipMaxShowValueElBounds.left -
+                tooltipMaxValueElBounds.left -
                 space -
                 tooltipMinHideBounds.right;
             }
@@ -250,13 +248,13 @@ export default class Range extends Component {
         }
 
         // Сдвигаем левый тултип
-        tooltipMinShowValueEl.style = [
+        tooltipMinValueEl.style = [
           'position: relative',
           `left: ${tooltipMinLeft}px`,
         ].join(';');
 
         // Сдвигаем правый тутлип
-        tooltipMaxShowValueEl.style = [
+        tooltipMaxValueEl.style = [
           'position: relative',
           `left: ${tooltipMaxLeft}px`,
         ].join(';');
