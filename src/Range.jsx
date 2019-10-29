@@ -113,9 +113,6 @@ export default class Range extends Component {
         handlerMaxBounds.left + handlerMaxBounds.width / 2;
 
       if (tooltipMinEl && tooltipMaxEl) {
-        // Левый бегунок
-        const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
-
         // Левый бегунок - видимое значение
         const tooltipMinShowValueEl = tooltipMinEl.querySelector(
           '.rc-slider-tooltip-show-value'
@@ -130,9 +127,6 @@ export default class Range extends Component {
           left: handleMinCenter - tooltipMinHalfWidth,
           right: handleMinCenter + tooltipMinHalfWidth,
         };
-
-        // Правый бегунок
-        const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
 
         // Правый бегунок - видимое значение
         const tooltipMaxShowValueEl = tooltipMaxEl.querySelector(
@@ -163,19 +157,20 @@ export default class Range extends Component {
         let tooltipMinLeft = 0;
         let tooltipMaxLeft = 0;
 
+        // Логика позиционирования без пересечении
         if (!isIntersection) {
-          if (rangeBounds.left >= tooltipMinElBounds.left) {
+          if (rangeBounds.left >= tooltipMinHideBounds.left) {
             tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left;
           }
 
-          if (rangeBounds.right <= tooltipMaxElBounds.right) {
+          if (rangeBounds.right <= tooltipMaxHideBounds.right) {
             tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
           }
         }
 
         // Логика позиционирования при пересечении
         if (isIntersection) {
-          if (rangeBounds.left >= tooltipMinElBounds.left) {
+          if (rangeBounds.left >= tooltipMinHideBounds.left) {
             // У левого края - min
             tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left;
 
@@ -187,7 +182,7 @@ export default class Range extends Component {
           }
 
           // У правого края
-          else if (rangeBounds.right <= tooltipMaxElBounds.right) {
+          else if (rangeBounds.right <= tooltipMaxHideBounds.right) {
             // У правого края - min
             tooltipMinLeft = -(
               tooltipMinHideBounds.right -
@@ -244,12 +239,12 @@ export default class Range extends Component {
         // Работа без space
         if (!space) {
           // Левый бегунок у правого края
-          if (rangeBounds.right <= tooltipMinElBounds.right) {
+          if (rangeBounds.right <= tooltipMinHideBounds.right) {
             tooltipMinLeft = -(tooltipMinHideBounds.right - rangeBounds.right);
           }
 
           // Правый бегунок у левого края
-          if (rangeBounds.left >= tooltipMaxElBounds.left) {
+          if (rangeBounds.left >= tooltipMaxHideBounds.left) {
             tooltipMaxLeft = rangeBounds.left - tooltipMaxHideBounds.left;
           }
         }
