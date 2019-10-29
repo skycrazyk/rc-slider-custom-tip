@@ -114,64 +114,63 @@ export default class Range extends Component {
       // console.log(handlerMin, handlerMax);
 
       // Относительно левого края
-      if (tooltipMinEl) {
-        const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
+      // if (tooltipMinEl) {
+      //   const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
 
-        const tooltipShowValueEl = tooltipMinEl.querySelector(
-          '.rc-slider-tooltip-show-value'
-        );
+      //   const tooltipShowValueEl = tooltipMinEl.querySelector(
+      //     '.rc-slider-tooltip-show-value'
+      //   );
 
-        const tooltipHideValueEl = tooltipMinEl.querySelector(
-          '.rc-slider-tooltip-hide-value'
-        );
+      //   const tooltipHideValueEl = tooltipMinEl.querySelector(
+      //     '.rc-slider-tooltip-hide-value'
+      //   );
 
-        const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
+      //   const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
 
-        if (rangeBounds.left >= tooltipMinElBounds.left) {
-          tooltipShowValueEl.style = [
-            'position: absolute',
-            'top: 0px',
-            `left: ${rangeBounds.left - tooltipHideValueElBounds.left}px`,
-          ].join(';');
-        } else {
-          tooltipShowValueEl.style = [
-            `position: absolute`,
-            'top: 0',
-            'left: 0',
-          ].join(';');
-        }
-      }
+      //   if (rangeBounds.left >= tooltipMinElBounds.left) {
+      //     tooltipShowValueEl.style = [
+      //       'position: absolute',
+      //       'top: 0px',
+      //       `left: ${rangeBounds.left - tooltipHideValueElBounds.left}px`,
+      //     ].join(';');
+      //   } else {
+      //     tooltipShowValueEl.style = [
+      //       `position: absolute`,
+      //       'top: 0',
+      //       'left: 0',
+      //     ].join(';');
+      //   }
+      // }
 
       // Относительно правого края
-      if (tooltipMaxEl) {
-        const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
+      // if (tooltipMaxEl) {
+      //   const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
 
-        const tooltipShowValueEl = tooltipMaxEl.querySelector(
-          '.rc-slider-tooltip-show-value'
-        );
+      //   const tooltipShowValueEl = tooltipMaxEl.querySelector(
+      //     '.rc-slider-tooltip-show-value'
+      //   );
 
-        const tooltipHideValueEl = tooltipMaxEl.querySelector(
-          '.rc-slider-tooltip-hide-value'
-        );
+      //   const tooltipHideValueEl = tooltipMaxEl.querySelector(
+      //     '.rc-slider-tooltip-hide-value'
+      //   );
 
-        const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
+      //   const tooltipHideValueElBounds = tooltipHideValueEl.getBoundingClientRect();
 
-        if (rangeBounds.right <= tooltipMaxElBounds.right) {
-          tooltipShowValueEl.style = [
-            'position: absolute',
-            'top: 0px',
-            `left: -${tooltipHideValueElBounds.right - rangeBounds.right}px`,
-          ].join(';');
-        } else {
-          tooltipShowValueEl.style = [
-            'position: absolute',
-            'top: 0',
-            'left: 0',
-          ].join(';');
-        }
-      }
+      //   if (rangeBounds.right <= tooltipMaxElBounds.right) {
+      //     tooltipShowValueEl.style = [
+      //       'position: absolute',
+      //       'top: 0px',
+      //       `left: -${tooltipHideValueElBounds.right - rangeBounds.right}px`,
+      //     ].join(';');
+      //   } else {
+      //     tooltipShowValueEl.style = [
+      //       'position: absolute',
+      //       'top: 0',
+      //       'left: 0',
+      //     ].join(';');
+      //   }
+      // }
 
-      // Между собой
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок
         const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
@@ -207,12 +206,57 @@ export default class Range extends Component {
 
         const tooltipMaxShowValueElBounds = tooltipMaxShowValueEl.getBoundingClientRect();
 
+        // Пересечение?
         const isIntersection =
           space &&
-          tooltipMinShowValueElBounds.right + space >=
-            tooltipMaxShowValueElBounds.left;
+          (tooltipMinHideValueElBounds.right + space >=
+            tooltipMaxHideValueElBounds.left ||
+            tooltipMinShowValueElBounds.right + space >=
+              tooltipMaxShowValueElBounds.left ||
+            tooltipMinShowValueElBounds.right + space >=
+              tooltipMaxHideValueElBounds.left ||
+            tooltipMinHideValueElBounds.right + space >=
+              tooltipMaxShowValueElBounds.left);
 
-        // Логика позиционирования
+        console.log(
+          tooltipMinHideValueElBounds.right + space >=
+            tooltipMaxHideValueElBounds.left,
+          tooltipMinShowValueElBounds.right + space >=
+            tooltipMaxShowValueElBounds.left
+        );
+
+        if (!isIntersection) {
+          if (rangeBounds.left >= tooltipMinElBounds.left) {
+            tooltipMinShowValueEl.style = [
+              'position: absolute',
+              'top: 0px',
+              `left: ${rangeBounds.left - tooltipMinHideValueElBounds.left}px`,
+            ].join(';');
+          } else {
+            tooltipMinShowValueEl.style = [
+              `position: absolute`,
+              'top: 0',
+              'left: 0',
+            ].join(';');
+          }
+
+          if (rangeBounds.right <= tooltipMaxElBounds.right) {
+            tooltipMaxShowValueEl.style = [
+              'position: absolute',
+              'top: 0px',
+              `left: -${tooltipMaxHideValueElBounds.right -
+                rangeBounds.right}px`,
+            ].join(';');
+          } else {
+            tooltipMaxShowValueEl.style = [
+              'position: absolute',
+              'top: 0',
+              'left: 0',
+            ].join(';');
+          }
+        }
+
+        // Логика позиционирования при пересечении
         if (isIntersection) {
           // У левого края
           if (rangeBounds.left >= tooltipMinElBounds.left) {
@@ -221,8 +265,14 @@ export default class Range extends Component {
               'top: 0px',
               `left: ${tooltipMinShowValueElBounds.right +
                 space -
-                tooltipMaxShowValueElBounds.left}px`,
+                tooltipMaxHideValueElBounds.left}px`,
             ].join(';');
+
+            console.log(
+              tooltipMinShowValueElBounds.right +
+                space -
+                tooltipMaxHideValueElBounds.left
+            );
           }
 
           // У правого края
