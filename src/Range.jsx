@@ -7,25 +7,23 @@ export default class Range extends Component {
   constructor(props) {
     super(props);
 
-    const { pushablePercent, min, max } = props;
-
     this.state = {
       tooltipMinEl: null,
       tooltipMaxEl: null,
       rangeEl: null,
-      pushablePercent: pushablePercent && ((max - min) / 100) * pushablePercent,
+      pushable: null,
     };
 
     this.rcSliderTipClass = 'rc-slider-tip';
     this.customHandle = this.customHandle.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
-    this.updatePushablePixels = this.updatePushablePixels.bind(this);
+    this.updatePushable = this.updatePushable.bind(this);
     this.onChange = this.onChange.bind(this);
     this.setRangeRef = this.setRangeRef.bind(this);
   }
 
   componentDidUpdate() {
-    this.updatePushablePixels();
+    this.updatePushable();
     this.updateTooltipPosition();
   }
 
@@ -51,14 +49,42 @@ export default class Range extends Component {
     );
   }
 
-  updatePushablePixels() {
-    const { min, max, pushablePixels } = this.props;
-    const { pushablePixels: pushablePixelsState, rangeEl } = this.state;
+  updatePushable() {
+    const { min, max, pushable } = this.props;
+    const { pushable: statePushable, rangeEl } = this.state;
 
-    if (rangeEl && pushablePixels && !pushablePixelsState) {
-      const rangeBounds = rangeEl.sliderRef.getBoundingClientRect();
-      const onePixelConsist = (max - min) / rangeBounds.width;
-      this.setState({ pushablePixels: pushablePixels * onePixelConsist });
+    if (!pushable && !statePushable) return;
+
+    let resolvePushable;
+
+    // Стандартное поведение
+    if (typeof pushable === 'number') {
+      resolvePushable = pushable;
+    }
+
+    // В процентах или в пикселях
+    else if (typeof pushable === 'string') {
+      const lastLetter = pushable[pushable.length - 1];
+
+      // процентах
+      if (lastLetter === '%') {
+        resolvePushable =
+          ((max - min) / 100) * Number(pushable.slice(0, pushable.length - 1));
+      }
+
+      const lastTwoLetters = pushable.slice(pushable.length - 2);
+
+      // в пикселях
+      if (lastTwoLetters === 'px' && rangeEl) {
+        const rangeBounds = rangeEl.sliderRef.getBoundingClientRect();
+        const onePixelConsist = (max - min) / rangeBounds.width;
+        const pixels = Number(pushable.slice(0, pushable.length - 2));
+        resolvePushable = pixels * onePixelConsist;
+      }
+    }
+
+    if (statePushable !== resolvePushable) {
+      this.setState({ pushable: resolvePushable });
     }
   }
 
@@ -256,6 +282,7 @@ export default class Range extends Component {
       const tooltipMinEl = handlerMin.querySelector(
         `.${this.rcSliderTipClass}`
       );
+
       const tooltipMaxEl = handlerMax.querySelector(
         `.${this.rcSliderTipClass}`
       );
@@ -269,12 +296,10 @@ export default class Range extends Component {
   }
 
   render() {
-    const { pushablePercent, pushablePixels } = this.state;
+    const { pushable } = this.state;
 
     // For omit some props
-    const { tooltipOverlay, ...restProps } = this.props;
-
-    const pushable = pushablePercent || pushablePixels;
+    const { tooltipOverlay, pushable: omitpushable, ...restProps } = this.props;
 
     return (
       <RcRange
@@ -282,7 +307,7 @@ export default class Range extends Component {
         ref={this.setRangeRef}
         handle={this.customHandle}
         onChange={this.onChange}
-        {...(pushable && { pushable })}
+        pushable={pushable}
       />
     );
   }

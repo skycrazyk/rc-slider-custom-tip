@@ -88,7 +88,7 @@ class App extends Component {
           defaultValue={[30000, 90000]}
           space={10}
           allowCross={false}
-          pushablePixels={15}
+          pushable="15px"
         />
         <h2 style={{ marginTop: 100 }}>
           Можно ограничить то на сколько tooltip`ы могут выходить за границы
