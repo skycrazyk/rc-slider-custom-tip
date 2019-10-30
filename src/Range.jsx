@@ -5,7 +5,6 @@ import nanoid from 'nanoid';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './style';
-import { type } from 'os';
 
 export default class Range extends Component {
   constructor(props) {
