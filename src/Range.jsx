@@ -248,7 +248,6 @@ export default class Range extends Component {
     const { rangeEl } = this.state;
 
     if (!rangeEl) {
-      // console.log(node);
       const {
         0: { handle: handlerMin },
         1: { handle: handlerMax },
