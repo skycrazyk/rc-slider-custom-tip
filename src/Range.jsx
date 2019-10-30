@@ -35,22 +35,23 @@ export default class Range extends Component {
 
   customHandle(props) {
     const { prefixCls, tooltipOverlay } = this.props;
-    const { value, dragging, index, ...restProps } = props;
+    const { value, index } = props;
     const isMin = index === 0;
+
+    const overlay =
+      typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value;
 
     return (
       <Tooltip
         id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
         prefixCls={prefixCls}
-        overlay={
-          typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value
-        }
+        overlay={overlay}
         visible={true}
         placement="bottom"
         key={index}
         onPopupAlign={this.onPopupAlign}
       >
-        <Handle value={value} {...restProps} />
+        <Handle {...props} />
       </Tooltip>
     );
   }
