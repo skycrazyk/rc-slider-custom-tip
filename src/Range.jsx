@@ -34,24 +34,15 @@ export default class Range extends Component {
   }
 
   customHandle(props) {
+    const { prefixCls } = this.props;
     const { value, dragging, index, ...restProps } = props;
     const isMin = index === 0;
 
     return (
       <Tooltip
         id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
-        prefixCls="rc-slider-tooltip"
-        overlay={
-          <div
-            className="rc-slider-tooltip-value"
-            style={{
-              position: 'relative',
-              left: 0,
-            }}
-          >
-            {value}
-          </div>
-        }
+        prefixCls={prefixCls}
+        overlay={value}
         visible={true}
         placement="bottom"
         key={index}
@@ -62,7 +53,7 @@ export default class Range extends Component {
     );
   }
 
-  // Получаем доступ к DOM элементам
+  // Получаем доступ к DOM элементам tooltip`ам
   onPopupAlign() {
     const { tooltipMinEl, tooltipMaxEl } = this.state;
 
@@ -114,14 +105,10 @@ export default class Range extends Component {
 
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок - видимое значение
-        const tooltipMinValueEl = tooltipMinEl.querySelector(
-          '.rc-slider-tooltip-value'
-        );
-
-        const tooltipMinValueElBounds = tooltipMinValueEl.getBoundingClientRect();
+        const tooltipMinElBounds = tooltipMinEl.getBoundingClientRect();
 
         // Левый бегунок - потенциальное значение
-        const tooltipMinHalfWidth = tooltipMinValueElBounds.width / 2;
+        const tooltipMinHalfWidth = tooltipMinElBounds.width / 2;
 
         const tooltipMinHideBounds = {
           left: handleMinCenter - tooltipMinHalfWidth,
@@ -129,14 +116,10 @@ export default class Range extends Component {
         };
 
         // Правый бегунок - видимое значение
-        const tooltipMaxValueEl = tooltipMaxEl.querySelector(
-          '.rc-slider-tooltip-value'
-        );
-
-        const tooltipMaxValueElBounds = tooltipMaxValueEl.getBoundingClientRect();
+        const tooltipMaxElBounds = tooltipMaxEl.getBoundingClientRect();
 
         // Правый бегунок - потенциальное значение
-        const tooltipMaxHalfWidth = tooltipMaxValueElBounds.width / 2;
+        const tooltipMaxHalfWidth = tooltipMaxElBounds.width / 2;
 
         const tooltipMaxHideBounds = {
           left: handleMaxCenter - tooltipMaxHalfWidth,
@@ -147,12 +130,9 @@ export default class Range extends Component {
         const isIntersection =
           space &&
           (tooltipMinHideBounds.right + space >= tooltipMaxHideBounds.left ||
-            tooltipMinValueElBounds.right + space >=
-              tooltipMaxValueElBounds.left ||
-            tooltipMinValueElBounds.right + space >=
-              tooltipMaxHideBounds.left ||
-            tooltipMinHideBounds.right + space >=
-              tooltipMaxValueElBounds.left);
+            tooltipMinElBounds.right + space >= tooltipMaxElBounds.left ||
+            tooltipMinElBounds.right + space >= tooltipMaxHideBounds.left ||
+            tooltipMinHideBounds.right + space >= tooltipMaxElBounds.left);
 
         let tooltipMinLeft = 0;
         let tooltipMaxLeft = 0;
@@ -176,7 +156,7 @@ export default class Range extends Component {
 
             // У левого края - max
             tooltipMaxLeft =
-              tooltipMinValueElBounds.right + space - tooltipMaxHideBounds.left;
+              tooltipMinElBounds.right + space - tooltipMaxHideBounds.left;
           }
 
           // У правого края
@@ -184,7 +164,7 @@ export default class Range extends Component {
             // У правого края - min
             tooltipMinLeft = -(
               tooltipMinHideBounds.right -
-              (tooltipMaxValueElBounds.left - space)
+              (tooltipMaxElBounds.left - space)
             );
 
             // У правого края - max
@@ -214,9 +194,7 @@ export default class Range extends Component {
 
               // позиция правого бегунка
               tooltipMaxLeft =
-                tooltipMinValueElBounds.right -
-                tooltipMaxHideBounds.left +
-                space;
+                tooltipMinElBounds.right - tooltipMaxHideBounds.left + space;
             }
 
             // Ближе к правому краю
@@ -227,9 +205,7 @@ export default class Range extends Component {
 
               // позиция левого бегунка
               tooltipMinLeft =
-                tooltipMaxValueElBounds.left -
-                space -
-                tooltipMinHideBounds.right;
+                tooltipMaxElBounds.left - space - tooltipMinHideBounds.right;
             }
           }
         }
@@ -248,13 +224,13 @@ export default class Range extends Component {
         }
 
         // Сдвигаем левый тултип
-        tooltipMinValueEl.style = [
+        tooltipMinEl.style = [
           'position: relative',
           `left: ${tooltipMinLeft}px`,
         ].join(';');
 
         // Сдвигаем правый тутлип
-        tooltipMaxValueEl.style = [
+        tooltipMaxEl.style = [
           'position: relative',
           `left: ${tooltipMaxLeft}px`,
         ].join(';');
@@ -271,11 +247,14 @@ export default class Range extends Component {
   render() {
     const { pushablePercent, pushablePixels } = this.state;
 
+    // For omit prefixCls prop
+    const { prefixCls, ...restProps } = this.props;
+
     const pushable = pushablePercent || pushablePixels;
 
     return (
       <RcRange
-        {...this.props}
+        {...restProps}
         ref={this.rangeEl}
         handle={this.customHandle}
         onChange={this.onChange}
@@ -284,3 +263,7 @@ export default class Range extends Component {
     );
   }
 }
+
+Range.defaultProps = {
+  prefixCls: 'rc-slider-tooltip',
+};
