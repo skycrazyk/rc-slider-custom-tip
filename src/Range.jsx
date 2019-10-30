@@ -1,9 +1,6 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { Range as RcRange, Handle } from 'rc-slider';
-import Tooltip from 'rc-tooltip';
-import nanoid from 'nanoid';
 import 'rc-slider/assets/index.css';
-import 'rc-tooltip/assets/bootstrap.css';
 import './style';
 
 export default class Range extends Component {
@@ -15,17 +12,16 @@ export default class Range extends Component {
     this.state = {
       tooltipMinEl: null,
       tooltipMaxEl: null,
+      rangeEl: null,
       pushablePercent: pushablePercent && ((max - min) / 100) * pushablePercent,
     };
 
-    this.rangeEl = createRef();
-    this.tooltipIdMin = nanoid();
-    this.tooltipIdMax = nanoid();
+    this.rcSliderTipClass = 'rc-slider-tip';
     this.customHandle = this.customHandle.bind(this);
-    this.onPopupAlign = this.onPopupAlign.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.updatePushablePixels = this.updatePushablePixels.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.setRangeRef = this.setRangeRef.bind(this);
   }
 
   componentDidUpdate() {
@@ -34,38 +30,25 @@ export default class Range extends Component {
   }
 
   customHandle(props) {
-    const { prefixCls, tooltipOverlay } = this.props;
+    const { tooltipOverlay } = this.props;
     const { value, index } = props;
-    const isMin = index === 0;
+
+    // omit dragging
+    const { dragging, ...restProps } = props;
 
     const overlay =
       typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value;
 
     return (
-      <Tooltip
-        id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
-        prefixCls={prefixCls}
-        overlay={overlay}
-        visible={true}
-        placement="bottom"
-        key={index}
-        onPopupAlign={this.onPopupAlign}
-      >
-        <Handle {...props} />
-      </Tooltip>
+      <Handle {...restProps} key={index}>
+        <div
+          className={`${this.rcSliderTipClass}-container`}
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <div className={this.rcSliderTipClass}>{overlay}</div>
+        </div>
+      </Handle>
     );
-  }
-
-  // Получаем доступ к DOM элементам tooltip`ам
-  onPopupAlign() {
-    const { tooltipMinEl, tooltipMaxEl } = this.state;
-
-    if (!tooltipMinEl && !tooltipMaxEl) {
-      this.setState({
-        tooltipMinEl: document.getElementById(this.tooltipIdMin),
-        tooltipMaxEl: document.getElementById(this.tooltipIdMax),
-      });
-    }
   }
 
   updatePushablePixels() {
@@ -86,23 +69,27 @@ export default class Range extends Component {
 
   updateTooltipPosition() {
     const { space, spade } = this.props;
-    const { tooltipMinEl, tooltipMaxEl } = this.state;
+    const { tooltipMinEl, tooltipMaxEl, rangeEl } = this.state;
 
-    if (this.rangeEl && this.rangeEl.current) {
+    if (rangeEl) {
       const {
         0: { handle: handlerMin },
         1: { handle: handlerMax },
-      } = this.rangeEl.current.handlesRefs;
+      } = rangeEl.handlesRefs;
 
+      // Левый handler
       const handlerMinBounds = handlerMin.getBoundingClientRect();
 
-      const handleMinCenter =
-        handlerMinBounds.left + handlerMinBounds.width / 2;
+      const handlerMinHalf = handlerMinBounds.width / 2;
 
+      const handleMinCenter = handlerMinBounds.left + handlerMinHalf;
+
+      // Правый handler
       const handlerMaxBounds = handlerMax.getBoundingClientRect();
 
-      const handleMaxCenter =
-        handlerMaxBounds.left + handlerMaxBounds.width / 2;
+      const handlerMaxHalf = handlerMaxBounds.width / 2;
+
+      const handleMaxCenter = handlerMaxBounds.left + handlerMaxHalf;
 
       if (tooltipMinEl && tooltipMaxEl) {
         // Левый бегунок - видимое значение
@@ -128,7 +115,7 @@ export default class Range extends Component {
         };
 
         // Расчитываем rangeBounds
-        const sourceRangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+        const sourceRangeBounds = rangeEl.sliderRef.getBoundingClientRect();
 
         let rangeBounds;
 
@@ -262,18 +249,43 @@ export default class Range extends Component {
     this.forceUpdate();
   }
 
+  setRangeRef(node) {
+    const { rangeEl } = this.state;
+
+    if (!rangeEl) {
+      // console.log(node);
+      const {
+        0: { handle: handlerMin },
+        1: { handle: handlerMax },
+      } = node.handlesRefs;
+
+      const tooltipMinEl = handlerMin.querySelector(
+        `.${this.rcSliderTipClass}`
+      );
+      const tooltipMaxEl = handlerMax.querySelector(
+        `.${this.rcSliderTipClass}`
+      );
+
+      this.setState({
+        tooltipMinEl,
+        tooltipMaxEl,
+        rangeEl: node,
+      });
+    }
+  }
+
   render() {
     const { pushablePercent, pushablePixels } = this.state;
 
-    // For omit prefixCls prop
-    const { prefixCls, tooltipOverlay, ...restProps } = this.props;
+    // For omit some props
+    const { tooltipOverlay, ...restProps } = this.props;
 
     const pushable = pushablePercent || pushablePixels;
 
     return (
       <RcRange
         {...restProps}
-        ref={this.rangeEl}
+        ref={this.setRangeRef}
         handle={this.customHandle}
         onChange={this.onChange}
         {...(pushable && { pushable })}
@@ -283,6 +295,5 @@ export default class Range extends Component {
 }
 
 Range.defaultProps = {
-  prefixCls: 'rc-slider-tooltip',
   spade: 'auto',
 };

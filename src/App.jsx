@@ -38,8 +38,9 @@ class App extends Component {
         <Range
           min={900000}
           max={19000000}
-          defaultValue={[8600000, 12000000]}
+          defaultValue={[900000, 19000000]}
           space={10}
+          spade={0}
           tooltipOverlay={({ value }) => (
             <div
               style={{
