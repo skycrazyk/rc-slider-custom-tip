@@ -20,6 +20,19 @@ class App extends Component {
   max={19000000}
   defaultValue={[8600000, 12000000]}
   space={10}
+
+  // tooltipOverlay - функция принимающая те же props, что и handle
+  tooltipOverlay={({ value }) => (
+    <div
+      style={{
+        padding: '5px 10px',
+        background: 'lime',
+        borderRadius: 5,
+      }}
+    >
+      {value}
+    </div>
+  )}
 />`}
         </pre>
         <Range
@@ -27,6 +40,17 @@ class App extends Component {
           max={19000000}
           defaultValue={[8600000, 12000000]}
           space={10}
+          tooltipOverlay={({ value }) => (
+            <div
+              style={{
+                padding: '5px 10px',
+                background: 'lime',
+                borderRadius: 5,
+              }}
+            >
+              {value}
+            </div>
+          )}
         />
         <h2 style={{ marginTop: 100 }}>
           Можно задать минимальное расстояние между бегунками

@@ -34,7 +34,7 @@ export default class Range extends Component {
   }
 
   customHandle(props) {
-    const { prefixCls } = this.props;
+    const { prefixCls, tooltipOverlay } = this.props;
     const { value, dragging, index, ...restProps } = props;
     const isMin = index === 0;
 
@@ -42,7 +42,9 @@ export default class Range extends Component {
       <Tooltip
         id={isMin ? this.tooltipIdMin : this.tooltipIdMax}
         prefixCls={prefixCls}
-        overlay={value}
+        overlay={
+          typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value
+        }
         visible={true}
         placement="bottom"
         key={index}
@@ -263,7 +265,7 @@ export default class Range extends Component {
     const { pushablePercent, pushablePixels } = this.state;
 
     // For omit prefixCls prop
-    const { prefixCls, ...restProps } = this.props;
+    const { prefixCls, tooltipOverlay, ...restProps } = this.props;
 
     const pushable = pushablePercent || pushablePixels;
 
