@@ -53,15 +53,10 @@ export default class Range extends Component {
 
   updatePushablePixels() {
     const { min, max, pushablePixels } = this.props;
-    const { pushablePixels: pushablePixelsState } = this.state;
+    const { pushablePixels: pushablePixelsState, rangeEl } = this.state;
 
-    if (
-      this.rangeEl &&
-      this.rangeEl.current &&
-      pushablePixels &&
-      !pushablePixelsState
-    ) {
-      const rangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+    if (rangeEl && pushablePixels && !pushablePixelsState) {
+      const rangeBounds = rangeEl.sliderRef.getBoundingClientRect();
       const onePixelConsist = (max - min) / rangeBounds.width;
       this.setState({ pushablePixels: pushablePixels * onePixelConsist });
     }

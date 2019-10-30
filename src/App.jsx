@@ -79,7 +79,7 @@ class App extends Component {
   defaultValue={[10000, 100000]}
   space={10}
   allowCross={false}
-  pushablePixels={20}
+  pushablePixels={15}
 />`}
         </pre>
         <Range
