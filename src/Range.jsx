@@ -82,11 +82,16 @@ export default class Range extends Component {
   }
 
   updateTooltipPosition() {
-    const { space } = this.props;
+    const { space, spade } = this.props;
     const { tooltipMinEl, tooltipMaxEl } = this.state;
 
     if (this.rangeEl && this.rangeEl.current) {
-      const rangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+      const sourceRangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+
+      const rangeBounds = {
+        left: sourceRangeBounds.left - spade,
+        right: sourceRangeBounds.right + spade,
+      };
 
       const {
         0: { handle: handlerMin },
@@ -266,4 +271,5 @@ export default class Range extends Component {
 
 Range.defaultProps = {
   prefixCls: 'rc-slider-tooltip',
+  spade: 0,
 };

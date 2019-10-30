@@ -6,10 +6,13 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <h2>Значения могут не накладываться друг на друга</h2>
+        <h2>
+          Tooltip`ы могут не накладываться друг на друга если задать{' '}
+          <code>space</code>
+        </h2>
         <p>
           Параметр <code>space</code> определяет расстояние в <code>px</code>{' '}
-          между значениями
+          между tooltip`ами
         </p>
         <pre>
           {`<Range
@@ -59,6 +62,7 @@ class App extends Component {
           max={100000}
           defaultValue={[30000, 90000]}
           space={10}
+          spade={7}
           allowCross={false}
           pushablePixels={15}
         />
