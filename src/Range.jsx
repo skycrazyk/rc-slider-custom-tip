@@ -5,6 +5,7 @@ import nanoid from 'nanoid';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './style';
+import { type } from 'os';
 
 export default class Range extends Component {
   constructor(props) {
@@ -86,13 +87,6 @@ export default class Range extends Component {
     const { tooltipMinEl, tooltipMaxEl } = this.state;
 
     if (this.rangeEl && this.rangeEl.current) {
-      const sourceRangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
-
-      const rangeBounds = {
-        left: sourceRangeBounds.left - spade,
-        right: sourceRangeBounds.right + spade,
-      };
-
       const {
         0: { handle: handlerMin },
         1: { handle: handlerMax },
@@ -130,6 +124,23 @@ export default class Range extends Component {
           left: handleMaxCenter - tooltipMaxHalfWidth,
           right: handleMaxCenter + tooltipMaxHalfWidth,
         };
+
+        // Расчитываем rangeBounds
+        const sourceRangeBounds = this.rangeEl.current.sliderRef.getBoundingClientRect();
+
+        let rangeBounds;
+
+        if (typeof spade === 'number') {
+          rangeBounds = {
+            left: sourceRangeBounds.left - spade,
+            right: sourceRangeBounds.right + spade,
+          };
+        } else if (spade === 'auto') {
+          rangeBounds = {
+            left: sourceRangeBounds.left - tooltipMinHalfWidth,
+            right: sourceRangeBounds.right + tooltipMaxHalfWidth,
+          };
+        }
 
         // Пересечение? Тут наверно нужно оптимизировать условие :)
         const isIntersection =
@@ -271,5 +282,5 @@ export default class Range extends Component {
 
 Range.defaultProps = {
   prefixCls: 'rc-slider-tooltip',
-  spade: 0,
+  spade: 'auto',
 };

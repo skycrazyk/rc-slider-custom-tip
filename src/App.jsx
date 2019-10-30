@@ -62,16 +62,41 @@ class App extends Component {
           max={100000}
           defaultValue={[30000, 90000]}
           space={10}
-          spade={7}
           allowCross={false}
           pushablePixels={15}
         />
         <h2 style={{ marginTop: 100 }}>
-          Значения могут накладываться друг на друга
+          Можно ограничить то на сколько tooltip`ы могут выходить за границы
+          слайдера
         </h2>
         <p>
-          Дефолтное поведение + значения не могут выходить за границы слайдера
+          Ограничить то на сколько tooltip`ы могут выходить за границы слайдера
+          можно при помощи параметра <code>spade</code> задав ему числовое
+          значение в <code>px</code>.
         </p>
+        <p>
+          По умолчанию <code>spade</code> = <code>auto</code>
+        </p>
+        <pre>
+          {`<Range
+  min={10000}
+  max={100000}
+  defaultValue={[30000, 90000]}
+  spade={7}
+  space={10}
+/>`}
+        </pre>
+        <Range
+          min={10000}
+          max={100000}
+          defaultValue={[30000, 90000]}
+          space={10}
+          spade={7}
+        />
+        <h2 style={{ marginTop: 100 }}>
+          Значения могут накладываться друг на друга
+        </h2>
+        <p>Дефолтное поведение</p>
         <pre>
           {`<Range
   min={2010}
