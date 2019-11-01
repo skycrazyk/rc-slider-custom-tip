@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Range as RcRange, Handle } from 'rc-slider';
+import omit from 'lodash/omit';
 import 'rc-slider/assets/index.css';
 import './style';
 
@@ -27,12 +28,42 @@ export default class Range extends Component {
     this.updateTooltipPosition();
   }
 
+  onChange(value) {
+    const { onChange } = this.props;
+    onChange && onChange(value);
+    this.forceUpdate();
+  }
+
+  setRangeRef(node) {
+    const { rangeEl } = this.state;
+
+    if (!rangeEl) {
+      const {
+        0: { handle: handlerMin },
+        1: { handle: handlerMax },
+      } = node.handlesRefs;
+
+      const tooltipMinEl = handlerMin.querySelector(
+        `.${this.rcSliderTipClass}`
+      );
+
+      const tooltipMaxEl = handlerMax.querySelector(
+        `.${this.rcSliderTipClass}`
+      );
+
+      this.setState({
+        tooltipMinEl,
+        tooltipMaxEl,
+        rangeEl: node,
+      });
+    }
+  }
+
   customHandle(props) {
     const { tooltipOverlay } = this.props;
     const { value, index } = props;
 
-    // omit dragging
-    const { dragging, ...restProps } = props;
+    const restProps = omit(props, ['dragging']);
 
     const overlay =
       typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value;
@@ -83,7 +114,11 @@ export default class Range extends Component {
       }
     }
 
-    if (statePushable !== resolvePushable) {
+    const isNeedUpdate =
+      Math.trunc(statePushable) !== Math.trunc(resolvePushable) &&
+      resolvePushable < max - min;
+
+    if (isNeedUpdate) {
       this.setState({ pushable: resolvePushable });
     }
   }
@@ -264,42 +299,15 @@ export default class Range extends Component {
     }
   }
 
-  onChange(value) {
-    const { onChange } = this.props;
-    onChange && onChange(value);
-    this.forceUpdate();
-  }
-
-  setRangeRef(node) {
-    const { rangeEl } = this.state;
-
-    if (!rangeEl) {
-      const {
-        0: { handle: handlerMin },
-        1: { handle: handlerMax },
-      } = node.handlesRefs;
-
-      const tooltipMinEl = handlerMin.querySelector(
-        `.${this.rcSliderTipClass}`
-      );
-
-      const tooltipMaxEl = handlerMax.querySelector(
-        `.${this.rcSliderTipClass}`
-      );
-
-      this.setState({
-        tooltipMinEl,
-        tooltipMaxEl,
-        rangeEl: node,
-      });
-    }
-  }
-
   render() {
     const { pushable } = this.state;
 
-    // For omit some props
-    const { tooltipOverlay, pushable: omitpushable, ...restProps } = this.props;
+    const restProps = omit(this.props, [
+      'pushable',
+      'tooltipOverlay',
+      'space',
+      'spade',
+    ]);
 
     return (
       <RcRange
@@ -307,7 +315,7 @@ export default class Range extends Component {
         ref={this.setRangeRef}
         handle={this.customHandle}
         onChange={this.onChange}
-        pushable={pushable}
+        {...(pushable && { pushable })}
       />
     );
   }

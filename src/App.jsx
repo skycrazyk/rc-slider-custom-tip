@@ -3,6 +3,16 @@ import { hot } from 'react-hot-loader/root';
 import Range from './Range';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      space: false,
+      tooltipOverlay: false,
+      spade: false,
+    };
+  }
+
   render() {
     return (
       <div className="container">
@@ -19,9 +29,15 @@ class App extends Component {
   min={900000}
   max={19000000}
   defaultValue={[8600000, 12000000]}
-  space={10}
-
-  // tooltipOverlay - функция принимающая те же props, что и handle
+  space={10}\n`}
+          {/* <input
+            type="checkbox"
+            onChange={() =>
+              this.setState({ tooltipOverlay: !this.state.tooltipOverlay })
+            }
+            checked={this.state.tooltipOverlay}
+          /> */}
+          {`// tooltipOverlay - функция принимающая те же props, что и handle
   tooltipOverlay={({ value }) => (
     <div
       style={{
@@ -36,101 +52,27 @@ class App extends Component {
 />`}
         </pre>
         <Range
-          min={900000}
-          max={19000000}
-          defaultValue={[900000, 19000000]}
-          space={10}
-          spade={0}
-          tooltipOverlay={({ value }) => (
-            <div
-              style={{
-                padding: '5px 10px',
-                background: 'lime',
-                borderRadius: 5,
-              }}
-            >
-              {value}
-            </div>
-          )}
-        />
-        <h2 style={{ marginTop: 100 }}>
-          Можно задать минимальное расстояние между бегунками
-        </h2>
-        <p>
-          Минимальное расстояние между бегунками можно задать одним из трёх
-          способов:
-        </p>
-        <ol>
-          <li>
-            <code>pushable</code> - конкретное значение
-          </li>
-          <li>
-            <code>pushablePercent</code> - процент от максимально возможного
-            диапазона
-          </li>
-          <li>
-            <code>pushablePixels</code> - расстояние между бегунками в пикселях
-          </li>
-        </ol>
-        <pre>
-          {`<Range
-  min={10000}
-  max={100000}
-  defaultValue={[10000, 100000]}
-  space={10}
-  allowCross={false}
-  pushablePixels={15}
-/>`}
-        </pre>
-        <Range
-          min={10000}
-          max={100000}
-          defaultValue={[30000, 90000]}
-          space={10}
+          min={800000}
+          max={5000000}
+          defaultValue={[800000, 5000000]}
+          step={1000}
+          space={12}
+          spade={8}
           allowCross={false}
-          pushable="15px"
+          pushable={'20px'}
+          // allowCross={true}
+          // tooltipOverlay={({ value }) => (
+          //   <div
+          //     style={{
+          //       padding: '5px 10px',
+          //       background: 'lime',
+          //       borderRadius: 5,
+          //     }}
+          //   >
+          //     {value}
+          //   </div>
+          // )}
         />
-        <h2 style={{ marginTop: 100 }}>
-          Можно ограничить то на сколько tooltip`ы могут выходить за границы
-          слайдера
-        </h2>
-        <p>
-          Ограничить то на сколько tooltip`ы могут выходить за границы слайдера
-          можно при помощи параметра <code>spade</code> задав ему числовое
-          значение в <code>px</code>.
-        </p>
-        <p>
-          По умолчанию <code>spade</code> = <code>auto</code>
-        </p>
-        <pre>
-          {`<Range
-  min={10000}
-  max={100000}
-  defaultValue={[30000, 90000]}
-  spade={7}
-  space={10}
-/>`}
-        </pre>
-        <Range
-          min={10000}
-          max={100000}
-          defaultValue={[30000, 90000]}
-          space={10}
-          spade={7}
-        />
-        <h2 style={{ marginTop: 100 }}>
-          Значения могут накладываться друг на друга
-        </h2>
-        <p>Дефолтное поведение</p>
-        <pre>
-          {`<Range
-  min={2010}
-  max={2019}
-  defaultValue={[2010, 2019]}
-  step={1}
-/>`}
-        </pre>
-        <Range min={2010} max={2019} defaultValue={[2014, 2015]} step={1} />
       </div>
     );
   }
