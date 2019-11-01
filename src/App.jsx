@@ -164,7 +164,7 @@ class App extends Component {
               onChange={this.toggle}
               defaultChecked={pushable === ''}
             />
-            Не определено
+            Не определено (просто нажми F5 😀)
           </label>
           {`\n`}
           <label>
