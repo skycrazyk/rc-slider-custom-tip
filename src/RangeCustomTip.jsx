@@ -12,6 +12,7 @@ export default class RangeCustomTip extends Component {
       pushable: null,
     };
 
+    this.rangeRef = null;
     this.rcSliderTipClass = 'rc-slider-tip';
     this.customHandle = this.customHandle.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
@@ -47,6 +48,8 @@ export default class RangeCustomTip extends Component {
       const tooltipMaxEl = handlerMax.querySelector(
         `.${this.rcSliderTipClass}`
       );
+
+      this.rangeRef = node; // for possibility getting source Range
 
       this.setState({
         tooltipMinEl,
@@ -298,9 +301,9 @@ export default class RangeCustomTip extends Component {
 
   render() {
     const { pushable } = this.state;
-    const { children: Range } = this.props;
+    const { children } = this.props;
 
-    return cloneElement(Range, {
+    return cloneElement(children, {
       ref: this.setRangeRef,
       handle: this.customHandle,
       onChange: this.onChange,
