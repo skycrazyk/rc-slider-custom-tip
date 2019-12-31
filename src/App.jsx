@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import './style';
 import RangeCustomTip from './RangeCustomTip';
 
 class App extends Component {

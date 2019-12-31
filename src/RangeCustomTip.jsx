@@ -1,7 +1,5 @@
 import React, { Component, cloneElement } from 'react';
 import { Handle } from 'rc-slider';
-import omit from 'lodash/omit';
-import './style';
 
 export default class RangeCustomTip extends Component {
   constructor(props) {
@@ -62,7 +60,7 @@ export default class RangeCustomTip extends Component {
     const { tooltipOverlay } = this.props;
     const { value, index } = props;
 
-    const restProps = omit(props, ['dragging']);
+    const { dragging, ...restProps } = props;
 
     const overlay =
       typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value;
