@@ -14,7 +14,7 @@ _Object$defineProperty2(exports, "__esModule", {
   value: true
 });
 
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/object/define-property"));
 
@@ -60,22 +60,22 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _rcSlider = require("rc-slider");
 
-function ownKeys(object, enumerableOnly) { var keys = (0, _keys["default"])(object); if (_getOwnPropertySymbols["default"]) { var symbols = (0, _getOwnPropertySymbols["default"])(object); if (enumerableOnly) symbols = (0, _filter["default"])(symbols).call(symbols, function (sym) { return (0, _getOwnPropertyDescriptor["default"])(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = (0, _filter.default)(symbols).call(symbols, function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach["default"])(_context6 = ownKeys(source, true)).call(_context6, function (key) { (0, _defineProperty3["default"])(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors["default"]) { (0, _defineProperties["default"])(target, (0, _getOwnPropertyDescriptors["default"])(source)); } else { var _context7; (0, _forEach["default"])(_context7 = ownKeys(source)).call(_context7, function (key) { (0, _defineProperty2["default"])(target, key, (0, _getOwnPropertyDescriptor["default"])(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach.default)(_context6 = ownKeys(source, true)).call(_context6, function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { var _context7; (0, _forEach.default)(_context7 = ownKeys(source)).call(_context7, function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 var RangeCustomTip =
 /*#__PURE__*/
 function (_Component) {
-  (0, _inherits2["default"])(RangeCustomTip, _Component);
+  (0, _inherits2.default)(RangeCustomTip, _Component);
 
   function RangeCustomTip(props) {
     var _context, _context2, _context3, _context4, _context5;
 
     var _this;
 
-    (0, _classCallCheck2["default"])(this, RangeCustomTip);
-    _this = (0, _possibleConstructorReturn2["default"])(this, (0, _getPrototypeOf2["default"])(RangeCustomTip).call(this, props));
+    (0, _classCallCheck2.default)(this, RangeCustomTip);
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RangeCustomTip).call(this, props));
     _this.state = {
       tooltipMinEl: null,
       tooltipMaxEl: null,
@@ -83,15 +83,15 @@ function (_Component) {
       pushable: null
     };
     _this.rcSliderTipClass = 'rc-slider-tip';
-    _this.customHandle = (0, _bind["default"])(_context = _this.customHandle).call(_context, (0, _assertThisInitialized2["default"])(_this));
-    _this.updateTooltipPosition = (0, _bind["default"])(_context2 = _this.updateTooltipPosition).call(_context2, (0, _assertThisInitialized2["default"])(_this));
-    _this.updatePushable = (0, _bind["default"])(_context3 = _this.updatePushable).call(_context3, (0, _assertThisInitialized2["default"])(_this));
-    _this.onChange = (0, _bind["default"])(_context4 = _this.onChange).call(_context4, (0, _assertThisInitialized2["default"])(_this));
-    _this.setRangeRef = (0, _bind["default"])(_context5 = _this.setRangeRef).call(_context5, (0, _assertThisInitialized2["default"])(_this));
+    _this.customHandle = (0, _bind.default)(_context = _this.customHandle).call(_context, (0, _assertThisInitialized2.default)(_this));
+    _this.updateTooltipPosition = (0, _bind.default)(_context2 = _this.updateTooltipPosition).call(_context2, (0, _assertThisInitialized2.default)(_this));
+    _this.updatePushable = (0, _bind.default)(_context3 = _this.updatePushable).call(_context3, (0, _assertThisInitialized2.default)(_this));
+    _this.onChange = (0, _bind.default)(_context4 = _this.onChange).call(_context4, (0, _assertThisInitialized2.default)(_this));
+    _this.setRangeRef = (0, _bind.default)(_context5 = _this.setRangeRef).call(_context5, (0, _assertThisInitialized2.default)(_this));
     return _this;
   }
 
-  (0, _createClass2["default"])(RangeCustomTip, [{
+  (0, _createClass2.default)(RangeCustomTip, [{
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
       this.updatePushable();
@@ -129,17 +129,17 @@ function (_Component) {
       var value = props.value,
           index = props.index;
       var dragging = props.dragging,
-          restProps = (0, _objectWithoutProperties2["default"])(props, ["dragging"]);
+          restProps = (0, _objectWithoutProperties2.default)(props, ["dragging"]);
       var overlay = typeof tooltipOverlay === 'function' ? tooltipOverlay(props) : value;
-      return _react["default"].createElement(_rcSlider.Handle, (0, _extends2["default"])({}, restProps, {
+      return _react.default.createElement(_rcSlider.Handle, (0, _extends2.default)({}, restProps, {
         key: index
-      }), _react["default"].createElement("div", {
+      }), _react.default.createElement("div", {
         className: "".concat(this.rcSliderTipClass, "-container"),
         style: {
           display: 'flex',
           justifyContent: 'center'
         }
-      }, _react["default"].createElement("div", {
+      }, _react.default.createElement("div", {
         className: this.rcSliderTipClass
       }, overlay)));
     }
@@ -163,20 +163,20 @@ function (_Component) {
           var lastLetter = pushable[pushable.length - 1]; // процентах
 
           if (lastLetter === '%') {
-            resolvePushable = (max - min) / 100 * Number((0, _slice["default"])(pushable).call(pushable, 0, pushable.length - 1));
+            resolvePushable = (max - min) / 100 * Number((0, _slice.default)(pushable).call(pushable, 0, pushable.length - 1));
           }
 
-          var lastTwoLetters = (0, _slice["default"])(pushable).call(pushable, pushable.length - 2); // в пикселях
+          var lastTwoLetters = (0, _slice.default)(pushable).call(pushable, pushable.length - 2); // в пикселях
 
           if (lastTwoLetters === 'px' && rangeEl) {
             var rangeBounds = rangeEl.sliderRef.getBoundingClientRect();
             var onePixelConsist = (max - min) / rangeBounds.width;
-            var pixels = Number((0, _slice["default"])(pushable).call(pushable, 0, pushable.length - 2));
+            var pixels = Number((0, _slice.default)(pushable).call(pushable, 0, pushable.length - 2));
             resolvePushable = pixels * onePixelConsist;
           }
         }
 
-      var isNeedUpdate = (0, _trunc["default"])(statePushable) !== (0, _trunc["default"])(resolvePushable) && resolvePushable < max - min;
+      var isNeedUpdate = (0, _trunc.default)(statePushable) !== (0, _trunc.default)(resolvePushable) && resolvePushable < max - min;
 
       if (isNeedUpdate) {
         this.setState({
@@ -332,7 +332,7 @@ function (_Component) {
   return RangeCustomTip;
 }(_react.Component);
 
-exports["default"] = RangeCustomTip;
+exports.default = RangeCustomTip;
 RangeCustomTip.defaultProps = {
   spade: 'auto'
 };
