@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { Range as RcRange, Handle } from 'rc-slider';
+import React, { Component, cloneElement } from 'react';
+import { Handle } from 'rc-slider';
 import omit from 'lodash/omit';
-import 'rc-slider/assets/index.css';
 import './style';
 
-export default class Range extends Component {
+export default class RangeCustomTip extends Component {
   constructor(props) {
     super(props);
 
@@ -301,26 +300,17 @@ export default class Range extends Component {
 
   render() {
     const { pushable } = this.state;
+    const { children: Range } = this.props;
 
-    const restProps = omit(this.props, [
-      'pushable',
-      'tooltipOverlay',
-      'space',
-      'spade',
-    ]);
-
-    return (
-      <RcRange
-        {...restProps}
-        ref={this.setRangeRef}
-        handle={this.customHandle}
-        onChange={this.onChange}
-        {...(pushable && { pushable })}
-      />
-    );
+    return cloneElement(Range, {
+      ref: this.setRangeRef,
+      handle: this.customHandle,
+      onChange: this.onChange,
+      ...(pushable && { pushable }),
+    });
   }
 }
 
-Range.defaultProps = {
+RangeCustomTip.defaultProps = {
   spade: 'auto',
 };

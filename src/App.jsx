@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader/root';
-import Range from './Range';
+import { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import RangeCustomTip from './RangeCustomTip';
 
 class App extends Component {
   constructor(props) {
@@ -37,16 +39,17 @@ class App extends Component {
       <div className="container">
         <h2>Доработанный rc-slider</h2>
         <p>
-          HOC для rc-slider. Все праметры пробрасываются в rc-slider как есть за
-          исключением pushable (см.ниже), и handle (нельзя переопределить, но
-          можно определить tooltipOverlay (см.ниже))
+          HOC для rc-slider. Переопределяет параметры pushable (см.ниже), и
+          handle (нельзя переопределить, но можно определить tooltipOverlay у
+          RangeCustomTip (см.ниже)).
         </p>
 
-        <Range
-          min={800000}
-          max={2000000}
-          defaultValue={[800000, 2000000]}
-          step={1000}
+        <p>
+          В качестве children нужно передать Range слайдер со всеми остальными
+          параметрами.
+        </p>
+
+        <RangeCustomTip
           {...(pushable === ''
             ? false
             : {
@@ -69,8 +72,15 @@ class App extends Component {
               </div>
             ),
           })}
-          allowCross={allowCross}
-        />
+        >
+          <Range
+            min={800000}
+            max={2000000}
+            defaultValue={[800000, 2000000]}
+            step={1000}
+            allowCross={allowCross}
+          />
+        </RangeCustomTip>
 
         <pre style={{ marginTop: 50 }}>
           {`<Range
