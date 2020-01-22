@@ -62,7 +62,7 @@ var _rcSlider = require("rc-slider");
 
 function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = (0, _filter.default)(symbols).call(symbols, function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach.default)(_context6 = ownKeys(source, true)).call(_context6, function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { var _context7; (0, _forEach.default)(_context7 = ownKeys(source)).call(_context7, function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach.default)(_context6 = ownKeys(Object(source), true)).call(_context6, function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { var _context7; (0, _forEach.default)(_context7 = ownKeys(Object(source))).call(_context7, function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 var RangeCustomTip =
 /*#__PURE__*/
@@ -82,6 +82,7 @@ function (_Component) {
       rangeEl: null,
       pushable: null
     };
+    _this.rangeRef = null;
     _this.rcSliderTipClass = 'rc-slider-tip';
     _this.customHandle = (0, _bind.default)(_context = _this.customHandle).call(_context, (0, _assertThisInitialized2.default)(_this));
     _this.updateTooltipPosition = (0, _bind.default)(_context2 = _this.updateTooltipPosition).call(_context2, (0, _assertThisInitialized2.default)(_this));
@@ -115,6 +116,8 @@ function (_Component) {
             handlerMax = _node$handlesRefs[1].handle;
         var tooltipMinEl = handlerMin.querySelector(".".concat(this.rcSliderTipClass));
         var tooltipMaxEl = handlerMax.querySelector(".".concat(this.rcSliderTipClass));
+        this.rangeRef = node; // for possibility getting source Range
+
         this.setState({
           tooltipMinEl: tooltipMinEl,
           tooltipMaxEl: tooltipMaxEl,
@@ -319,8 +322,8 @@ function (_Component) {
     key: "render",
     value: function render() {
       var pushable = this.state.pushable;
-      var Range = this.props.children;
-      return (0, _react.cloneElement)(Range, _objectSpread({
+      var children = this.props.children;
+      return (0, _react.cloneElement)(children, _objectSpread({
         ref: this.setRangeRef,
         handle: this.customHandle,
         onChange: this.onChange
