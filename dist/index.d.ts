@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HandleProps } from 'rc-slider';
+import { HandleProps, CommonApiProps } from 'rc-slider';
 
 export interface RangeCustomTipProps {
   /**
@@ -22,6 +22,11 @@ export interface RangeCustomTipProps {
    * что его доп-но можно задавать в px и %
    */
   pushable?: string;
+  /**
+   * onChange will be triggered while the value of Slider changing.
+   * For prop (count = -1) type returned is [number, undefined]. Bug raised in rc-slider https://github.com/react-component/slider/issues/457
+   */
+  onChange?(value: number[]): void;
 }
 
 /**
