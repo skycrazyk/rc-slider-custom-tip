@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { HandleProps, CommonApiProps } from 'rc-slider';
+import { HandleProps } from 'rc-slider';
+
+interface TooltipOverlayProps extends HandleProps {
+  value: number;
+}
 
 export interface RangeCustomTipProps {
   /**
@@ -15,7 +19,7 @@ export interface RangeCustomTipProps {
    * Функция принимающая те же props, что и handle.
    * Должна вернуть экземпляр ReactNode
    */
-  tooltipOverlay?: (props: HandleProps) => React.ReactNode;
+  tooltipOverlay?: (props: TooltipOverlayProps) => React.ReactNode;
   /**
    * Минимальное расстояние м/у бегунками.
    * Аналог нативного "pushable" с той разницей,
