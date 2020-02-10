@@ -285,16 +285,12 @@ export default class RangeCustomTip extends Component {
         }
 
         // Сдвигаем левый тултип
-        tooltipMinEl.style = [
-          'position: relative',
-          `left: ${tooltipMinLeft}px`,
-        ].join(';');
+        tooltipMinEl.style.position = 'relative';
+        tooltipMinEl.style.left = `${tooltipMinLeft}px`;
 
         // Сдвигаем правый тутлип
-        tooltipMaxEl.style = [
-          'position: relative',
-          `left: ${tooltipMaxLeft}px`,
-        ].join(';');
+        tooltipMaxEl.style.position = 'relative';
+        tooltipMaxEl.style.left = `${tooltipMaxLeft}px`;
       }
     }
   }

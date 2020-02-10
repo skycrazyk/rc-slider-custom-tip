@@ -6,8 +6,6 @@ var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequ
 
 var _Object$defineProperty2 = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
-require("core-js/modules/es.array.join");
-
 require("core-js/modules/es.number.constructor");
 
 _Object$defineProperty2(exports, "__esModule", {
@@ -312,9 +310,11 @@ function (_Component) {
           } // Сдвигаем левый тултип
 
 
-          tooltipMinEl.style = ['position: relative', "left: ".concat(tooltipMinLeft, "px")].join(';'); // Сдвигаем правый тутлип
+          tooltipMinEl.style.position = 'relative';
+          tooltipMinEl.style.left = "".concat(tooltipMinLeft, "px"); // Сдвигаем правый тутлип
 
-          tooltipMaxEl.style = ['position: relative', "left: ".concat(tooltipMaxLeft, "px")].join(';');
+          tooltipMaxEl.style.position = 'relative';
+          tooltipMaxEl.style.left = "".concat(tooltipMaxLeft, "px");
         }
       }
     }
