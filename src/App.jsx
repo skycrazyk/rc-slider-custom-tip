@@ -77,7 +77,7 @@ class App extends Component {
           <Range
             min={800000}
             max={2000000}
-            defaultValue={[800000, 2000000]}
+            defaultValue={[2000000, 2000000]}
             step={1000}
             allowCross={allowCross}
           />

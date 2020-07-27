@@ -1,6 +1,8 @@
 import React, { Component, cloneElement } from 'react';
 import { Handle } from 'rc-slider';
 
+let isFirstUpdatePosition = true;
+
 export default class RangeCustomTip extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +26,10 @@ export default class RangeCustomTip extends Component {
   componentDidUpdate() {
     this.updatePushable();
     this.updateTooltipPosition();
+  }
+
+  componentWillUnmount() {
+    isFirstUpdatePosition = true;
   }
 
   onChange(value) {
@@ -217,19 +223,23 @@ export default class RangeCustomTip extends Component {
 
             // У левого края - max
             tooltipMaxLeft =
-              tooltipMinElBounds.right + space - tooltipMaxHideBounds.left;
+              tooltipMinElBounds.right +
+              space -
+              tooltipMaxHideBounds.left +
+              (isFirstUpdatePosition ? tooltipMinLeft : 0);
           }
 
           // У правого края
           else if (rangeBounds.right <= tooltipMaxHideBounds.right) {
+            // У правого края - max
+            tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
+
             // У правого края - min
             tooltipMinLeft = -(
               tooltipMinHideBounds.right -
-              (tooltipMaxElBounds.left - space)
+              (tooltipMaxElBounds.left - space) -
+              (isFirstUpdatePosition ? tooltipMaxLeft : 0)
             );
-
-            // У правого края - max
-            tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
           }
 
           // В центре
@@ -291,6 +301,8 @@ export default class RangeCustomTip extends Component {
         // Сдвигаем правый тутлип
         tooltipMaxEl.style.position = 'relative';
         tooltipMaxEl.style.left = `${tooltipMaxLeft}px`;
+
+        isFirstUpdatePosition = false;
       }
     }
   }
