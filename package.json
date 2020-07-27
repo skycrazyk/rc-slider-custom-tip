@@ -1,6 +1,6 @@
 {
   "name": "@skycrazyk/rc-slider-custom-tip",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "HOC for rc-slider",
   "main": "dist/index.js",
   "scripts": {
@@ -33,9 +33,7 @@
     "webpack-dev-server": "^3.10.1",
     "rc-slider": "^8.7.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
-  },
-  "dependencies": {
+    "react-dom": "^16.12.0",
     "@babel/runtime": "^7.7.7",
     "@babel/runtime-corejs3": "^7.7.7",
     "core-js": "^3.6.1"
