@@ -62,6 +62,8 @@ function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object)
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach.default)(_context6 = ownKeys(Object(source), true)).call(_context6, function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { var _context7; (0, _forEach.default)(_context7 = ownKeys(Object(source))).call(_context7, function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
+var isFirstUpdatePosition = true;
+
 var RangeCustomTip =
 /*#__PURE__*/
 function (_Component) {
@@ -95,6 +97,11 @@ function (_Component) {
     value: function componentDidUpdate() {
       this.updatePushable();
       this.updateTooltipPosition();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      isFirstUpdatePosition = true;
     }
   }, {
     key: "onChange",
@@ -263,13 +270,13 @@ function (_Component) {
               // У левого края - min
               tooltipMinLeft = rangeBounds.left - tooltipMinHideBounds.left; // У левого края - max
 
-              tooltipMaxLeft = tooltipMinElBounds.right + space - tooltipMaxHideBounds.left;
+              tooltipMaxLeft = tooltipMinElBounds.right + space - tooltipMaxHideBounds.left + (isFirstUpdatePosition ? tooltipMinLeft : 0);
             } // У правого края
             else if (rangeBounds.right <= tooltipMaxHideBounds.right) {
-                // У правого края - min
-                tooltipMinLeft = -(tooltipMinHideBounds.right - (tooltipMaxElBounds.left - space)); // У правого края - max
+                // У правого края - max
+                tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right); // У правого края - min
 
-                tooltipMaxLeft = -(tooltipMaxHideBounds.right - rangeBounds.right);
+                tooltipMinLeft = -(tooltipMinHideBounds.right - (tooltipMaxElBounds.left - space) - (isFirstUpdatePosition ? tooltipMaxLeft : 0));
               } // В центре
               else {
                   var diff = tooltipMinHideBounds.right + space - tooltipMaxHideBounds.left;
@@ -315,6 +322,7 @@ function (_Component) {
 
           tooltipMaxEl.style.position = 'relative';
           tooltipMaxEl.style.left = "".concat(tooltipMaxLeft, "px");
+          isFirstUpdatePosition = false;
         }
       }
     }
