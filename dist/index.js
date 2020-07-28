@@ -62,8 +62,6 @@ function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object)
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context6; (0, _forEach.default)(_context6 = ownKeys(Object(source), true)).call(_context6, function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { var _context7; (0, _forEach.default)(_context7 = ownKeys(Object(source))).call(_context7, function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
-var isFirstUpdatePosition = true;
-
 var RangeCustomTip =
 /*#__PURE__*/
 function (_Component) {
@@ -80,7 +78,8 @@ function (_Component) {
       tooltipMinEl: null,
       tooltipMaxEl: null,
       rangeEl: null,
-      pushable: null
+      pushable: null,
+      isFirstUpdatePosition: true
     };
     _this.rangeRef = null;
     _this.rcSliderTipClass = 'rc-slider-tip';
@@ -97,11 +96,6 @@ function (_Component) {
     value: function componentDidUpdate() {
       this.updatePushable();
       this.updateTooltipPosition();
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      isFirstUpdatePosition = true;
     }
   }, {
     key: "onChange",
@@ -201,7 +195,8 @@ function (_Component) {
       var _this$state2 = this.state,
           tooltipMinEl = _this$state2.tooltipMinEl,
           tooltipMaxEl = _this$state2.tooltipMaxEl,
-          rangeEl = _this$state2.rangeEl;
+          rangeEl = _this$state2.rangeEl,
+          isFirstUpdatePosition = _this$state2.isFirstUpdatePosition;
 
       if (rangeEl) {
         var _rangeEl$handlesRefs = rangeEl.handlesRefs,
@@ -322,7 +317,9 @@ function (_Component) {
 
           tooltipMaxEl.style.position = 'relative';
           tooltipMaxEl.style.left = "".concat(tooltipMaxLeft, "px");
-          isFirstUpdatePosition = false;
+          !this.state.isFirstUpdatePosition && setState({
+            isFirstUpdatePosition: false
+          });
         }
       }
     }

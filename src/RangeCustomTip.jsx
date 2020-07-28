@@ -1,8 +1,6 @@
 import React, { Component, cloneElement } from 'react';
 import { Handle } from 'rc-slider';
 
-let isFirstUpdatePosition = true;
-
 export default class RangeCustomTip extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +10,7 @@ export default class RangeCustomTip extends Component {
       tooltipMaxEl: null,
       rangeEl: null,
       pushable: null,
+      isFirstUpdatePosition: true,
     };
 
     this.rangeRef = null;
@@ -26,10 +25,6 @@ export default class RangeCustomTip extends Component {
   componentDidUpdate() {
     this.updatePushable();
     this.updateTooltipPosition();
-  }
-
-  componentWillUnmount() {
-    isFirstUpdatePosition = true;
   }
 
   onChange(value) {
@@ -131,7 +126,12 @@ export default class RangeCustomTip extends Component {
 
   updateTooltipPosition() {
     const { space, spade } = this.props;
-    const { tooltipMinEl, tooltipMaxEl, rangeEl } = this.state;
+    const {
+      tooltipMinEl,
+      tooltipMaxEl,
+      rangeEl,
+      isFirstUpdatePosition,
+    } = this.state;
 
     if (rangeEl) {
       const {
@@ -302,7 +302,8 @@ export default class RangeCustomTip extends Component {
         tooltipMaxEl.style.position = 'relative';
         tooltipMaxEl.style.left = `${tooltipMaxLeft}px`;
 
-        isFirstUpdatePosition = false;
+        !this.state.isFirstUpdatePosition &&
+          setState({ isFirstUpdatePosition: false });
       }
     }
   }
