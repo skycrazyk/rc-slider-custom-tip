@@ -1,6 +1,6 @@
 {
   "name": "@skycrazyk/rc-slider-custom-tip",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "HOC for rc-slider",
   "main": "dist/index.js",
   "scripts": {
