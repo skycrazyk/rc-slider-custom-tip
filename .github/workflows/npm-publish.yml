@@ -4,12 +4,8 @@
 name: Node.js Package
 
 on:
-  # release:
-  #   types: [created]
-  branches:
-    - master
-  tags:
-    - v1.*
+  release:
+    types: [created]
 
 jobs:
   # build:
