@@ -9,7 +9,7 @@ on:
   branches:
     - master
   tags:
-    - v1.*
+    - 1.*
 
 jobs:
   # build:
