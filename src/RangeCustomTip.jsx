@@ -302,8 +302,8 @@ export default class RangeCustomTip extends Component {
         tooltipMaxEl.style.position = 'relative';
         tooltipMaxEl.style.left = `${tooltipMaxLeft}px`;
 
-        !this.state.isFirstUpdatePosition &&
-          setState({ isFirstUpdatePosition: false });
+        this.state.isFirstUpdatePosition &&
+          this.setState({ isFirstUpdatePosition: false });
       }
     }
   }

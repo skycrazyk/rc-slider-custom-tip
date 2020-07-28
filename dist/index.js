@@ -317,7 +317,7 @@ function (_Component) {
 
           tooltipMaxEl.style.position = 'relative';
           tooltipMaxEl.style.left = "".concat(tooltipMaxLeft, "px");
-          !this.state.isFirstUpdatePosition && setState({
+          this.state.isFirstUpdatePosition && this.setState({
             isFirstUpdatePosition: false
           });
         }
